@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Trabalhos | Wello Tattoo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <h1>Wello Tattoo</h1>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Voltar ao Início</a></li>
+                <li><a href="index.html#agendamento">Agendamento</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="galeria" style="padding-top: 9rem;">
+        <h2>Galeria Completa</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+            Confira alguns dos principais trabalhos e projetos autorais realizados pelo Wello.
+        </p>
+        <div class="grid-galeria">
+            <img src="assets/image1.png" alt="Tatuagem por Wello - 1" data-carrossel="assets/image1.png, assets/image1.1.png">
+            <img src="assets/image2.png" alt="Tatuagem por Wello - 2" data-carrossel="assets/image2.png">
+            <img src="assets/image3.png" alt="Tatuagem por Wello - 3" data-carrossel="assets/image3.png, assets/image1.1.png, assets/image1.1.png">
+            <img src="assets/image4.png" alt="Tatuagem por Wello - 4" data-carrossel="assets/image4.png">
+            
+            <img src="assets/image5.png" alt="Tatuagem por Wello - 5" data-carrossel="assets/image5.png">
+            <img src="assets/image6.png" alt="Tatuagem por Wello - 6" data-carrossel="assets/image6.png">
+            <img src="assets/image7.png" alt="Tatuagem por Wello - 7" data-carrossel="assets/image7.png">
+            <img src="assets/image8.png" alt="Tatuagem por Wello - 8" data-carrossel="assets/image8.png">
+
+            <img src="assets/image7.png" alt="Tatuagem por Wello - 7" data-carrossel="assets/image7.png">
+            <img src="assets/image8.png" alt="Tatuagem por Wello - 8" data-carrossel="assets/image8.png">
+        </div>
+
+        <div class="galeria-btn-container">
+            <a href="index.html" class="btn">Voltar para a Página Inicial</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Wello Tattoo. Todos os direitos reservados.</p>
+    </footer>
+
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <button class="lightbox-btn lightbox-prev">&#10094;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Tatuagem Expandida">
+        </div>
+        <button class="lightbox-btn lightbox-next">&#10095;</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

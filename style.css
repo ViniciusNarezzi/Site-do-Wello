@@ -1,0 +1,1293 @@
+/* ==========================================================================
+   Wello Tattoo - Style Sheet
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #141414;
+    --bg-card: #1c1c1c;
+    
+    --gold-primary: #d4af37;
+    --gold-light: #f3e5ab;
+    --gold-dark: #aa8c2c;
+    --gold-gradient: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%);
+    
+    --text-primary: #ffffff;
+    --text-muted: #b3b3b3;
+    --border-gold: rgba(212, 175, 55, 0.3);
+    
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Montserrat', sans-serif;
+    
+    --transition-fast: 0.3s ease;
+    --transition-smooth: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.7;
+    overflow-x: clip;
+}
+
+/* Scrollbar Customizada Dourada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-primary);
+}
+
+/* Tipografia */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-fast);
+}
+
+/* Seções Padrão */
+section {
+    padding: 6rem 2rem;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-color: var(--bg-primary);
+    z-index: 2;
+}
+
+section::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: var(--gold-gradient);
+    margin: 4rem auto 0 auto;
+    opacity: 0.4;
+}
+
+section:last-of-type::after {
+    display: none;
+}
+
+/* ==========================================================================
+   Galeria 
+   ========================================================================== */
+
+.grid-galeria {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 2rem auto 0 auto;
+    padding-bottom: 3rem; 
+}
+
+.grid-galeria img {
+    width: 100%;
+    height: 380px; 
+    object-fit: cover;
+    border-radius: 18px;
+    border: 1px solid var(--border-gold);
+    display: block;
+    
+    filter: grayscale(100%) contrast(110%);
+    transition: var(--transition-smooth);
+}
+
+.grid-galeria img:nth-child(4n+2),
+.grid-galeria img:nth-child(4n) {
+    transform: translateY(35px);
+}
+
+.grid-galeria img:hover {
+    filter: grayscale(0%) contrast(100%);
+    border-color: var(--gold-primary);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+    z-index: 2;
+    position: relative;
+}
+
+.grid-galeria img:nth-child(4n+1):hover,
+.grid-galeria img:nth-child(4n+3):hover {
+    transform: scale(1.03);
+}
+
+.grid-galeria img:nth-child(4n+2):hover,
+.grid-galeria img:nth-child(4n):hover {
+    transform: translateY(35px) scale(1.03);
+}
+
+/* ==========================================================================
+   Responsividade (Apenas reduz as colunas, nunca aumenta)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+    .grid-galeria {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 1.2rem;
+    }
+
+    .grid-galeria img {
+        height: 300px;
+    }
+
+    .grid-galeria img:nth-child(4n+2),
+    .grid-galeria img:nth-child(4n) {
+        transform: none;
+    }
+
+    .grid-galeria img:nth-child(even) {
+        transform: translateY(20px);
+    }
+
+    .grid-galeria img:nth-child(odd):hover {
+        transform: scale(1.03);
+    }
+
+    .grid-galeria img:nth-child(even):hover {
+        transform: translateY(25px) scale(1.03);
+    }
+}
+
+@media (max-width: 500px) {
+    .grid-galeria {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .grid-galeria img {
+        height: 220px;
+        border-radius: 12px;
+    }
+
+    .grid-galeria img:nth-child(even) {
+        transform: translateY(15px);
+    }
+
+    .grid-galeria img:nth-child(even):hover {
+        transform: translateY(15px) scale(1.03);
+    }
+}
+
+/* Responsividade para Tablets e Celulares */
+@media (max-width: 992px) {
+    .grid-galeria {
+        grid-template-columns: repeat(2, 1fr); /* Reduz para 2 colunas */
+        padding-bottom: 3rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-galeria {
+        gap: 0.8rem;
+    }
+    
+    .grid-galeria img {
+        height: 250px; 
+        border-radius: 12px;
+    }
+    
+    .grid-galeria img:nth-child(even) {
+        margin-top: 30px; 
+    }
+}
+
+/* Cabeçalho e Navegação */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 1.2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+}
+
+nav a {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    padding: 5px 0;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--gold-gradient);
+    transition: var(--transition-fast);
+}
+
+nav a:hover {
+    color: var(--gold-light);
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* ==========================================================================
+   Hero Section - Efeito com Foto de Fundo e Transição de Desaparecimento
+   ========================================================================== */
+
+#hero {
+    min-height: 100vh;
+    width: 100%;
+    position: sticky; /* Mantém a imagem presa no fundo */
+    top: 0;
+    z-index: 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem 2rem;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+}
+
+#hero::after {
+    display: none;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/wello.png'); 
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    filter: brightness(0.85) contrast(110%);
+    z-index: 1;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom, 
+        rgba(10, 10, 10, 0.6) 0%, 
+        rgba(10, 10, 10, 0.3) 50%, 
+        rgba(10, 10, 10, 0.95) 100%
+    );
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 800px;
+}
+
+/* Título: Arte Autoral e Traços Únicos */
+#hero h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    color: #ffffff;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background: linear-gradient(180deg, #ffffff 0%, var(--gold-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 25px rgba(0, 0, 0, 0.9);
+}
+
+/* Parágrafo: Transformando suas ideias em arte... */
+#hero p {
+    font-size: 1.25rem;
+    color: #e0e0e0;
+    max-width: 650px;
+    margin: 0 auto 2.5rem auto;
+    font-weight: 400;
+    line-height: 1.8;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+}
+
+/* Botões Geral */
+.btn, .btn-whatsapp {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bg-primary);
+    background: var(--gold-gradient);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+    transition: var(--transition-smooth);
+}
+
+.btn:hover, .btn-whatsapp:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
+    color: #000;
+}
+
+/* Títulos das Seções */
+#sobre h2, #galeria h2, #estilos h2, #localizacao h2, #agendamento h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    display: block;
+    color: var(--text-primary);
+}
+
+#sobre h2::after, #galeria h2::after, #estilos h2::after, #localizacao h2::after, #agendamento h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--gold-primary);
+}
+
+/* ==========================================================================
+   Galeria de Trabalhos & Elemento Decorativo Flutuante
+   ========================================================================== */
+
+#galeria {
+    position: relative;
+    z-index: 10;
+    background-color: var(--bg-primary);
+    box-shadow: 0 -20px 50px rgba(10, 10, 10, 1);
+    overflow: hidden; 
+}
+
+.grid-galeria {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 2rem auto 0 auto;
+    padding-bottom: 3rem;
+}
+
+.grid-galeria img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 1px solid var(--border-gold);
+    display: block;
+    filter: grayscale(100%) contrast(110%);
+    transition: var(--transition-smooth);
+}
+
+.grid-galeria img:nth-child(4n+2),
+.grid-galeria img:nth-child(4n) {
+    transform: translateY(35px);
+}
+
+.grid-galeria img:hover {
+    filter: grayscale(0%) contrast(100%);
+    border-color: var(--gold-primary);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+    z-index: 2;
+    position: relative;
+}
+
+.grid-galeria img:nth-child(4n+1):hover,
+.grid-galeria img:nth-child(4n+3):hover {
+    transform: scale(1.03);
+}
+
+.grid-galeria img:nth-child(4n+2):hover,
+.grid-galeria img:nth-child(4n):hover {
+    transform: translateY(35px) scale(1.03);
+}
+
+.galeria-elemento-decorativo {
+    position: absolute;
+    top: 0px;                 
+    left: -85px !important;   
+    right: auto!important;            
+    width: 350px;              
+    height: auto;
+    z-index: 25;
+    pointer-events: none;
+    
+    opacity: 0;
+    transform: translateX(-100vw) rotate(-20deg); 
+    
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1), 
+                opacity 1.5s ease-in-out;
+    will-change: transform, opacity;
+}
+
+#galeria.is-visible .galeria-elemento-decorativo {
+    opacity: 1;
+    transform: translateX(0) rotate(25deg);
+}
+
+/* Responsividade da Galeria e Elemento Decorativo */
+@media (max-width: 900px) {
+    .grid-galeria {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+    }
+
+    .grid-galeria img {
+        height: 280px;
+    }
+
+    .grid-galeria img:nth-child(4n+2),
+    .grid-galeria img:nth-child(4n) {
+        transform: none;
+    }
+
+    .grid-galeria img:nth-child(even) {
+        transform: translateY(25px);
+    }
+
+    .grid-galeria img:nth-child(odd):hover {
+        transform: scale(1.03);
+    }
+
+    .grid-galeria img:nth-child(even):hover {
+        transform: translateY(25px) scale(1.03);
+    }
+
+    .galeria-elemento-decorativo {
+        width: 75px;
+        top: 15px;
+        right: 15px;
+    }
+}
+
+/* Responsividade para Telas Menores */
+@media (max-width: 768px) {
+    .galeria-elemento-decorativo {
+        width: 90px;
+        top: 10px;
+        right: 10px;
+    }
+}
+
+/* Sobre o Wello & Marquee */
+#sobre {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.wello-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.04;
+    user-select: none;
+}
+
+.wello-bg-text .row {
+    white-space: nowrap;
+    font-family: var(--font-heading);
+    font-size: 8rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 10px;
+}
+
+.wello-bg-text .extra-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .wello-bg-text .extra-mobile {
+        display: block; /* Faz as linhas extras aparecerem no celular */
+    }
+
+    .wello-bg-text {
+        height: 100%;
+        justify-content: space-between;
+        opacity: 0.05;
+    }
+
+    .wello-bg-text .row {
+        font-size: 4.5rem;
+        letter-spacing: 5px;
+        line-height: 1.2;
+    }
+}
+
+.row-right span {
+    display: inline-block;
+    animation: marqueeRight 25s linear infinite;
+}
+
+.row-left span {
+    display: inline-block;
+    animation: marqueeLeft 25s linear infinite;
+}
+
+@keyframes marqueeRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0%); }
+}
+
+@keyframes marqueeLeft {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+.sobre-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    padding: 3rem 2.5rem 2rem 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: left;
+    position: relative;
+}
+
+.sobre-conteudo {
+    max-height: 180px;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.sobre-conteudo p {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.sobre-conteudo p strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.sobre-conteudo p.intro {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.sobre-conteudo p.intro span {
+    color: var(--gold-light);
+    font-weight: 700;
+}
+
+.sobre-conteudo p.tagline {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 2rem;
+    letter-spacing: 1px;
+}
+
+.sobre-conteudo::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 90px;
+    background: linear-gradient(to bottom, rgba(20, 20, 20, 0) 0%, rgba(20, 20, 20, 1) 100%);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.sobre-conteudo.expandido {
+    max-height: 2000px !important; 
+}
+
+.sobre-conteudo.expandido::after {
+    opacity: 0;
+}
+
+.btn-ler-mais {
+    display: block;
+    margin: 1.5rem auto 0 auto;
+    background: transparent;
+    border: 1px solid var(--border-gold);
+    color: var(--gold-light);
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    padding: 0.6rem 1.8rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-ler-mais:hover {
+    background: var(--gold-gradient);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Estilos / Especialidades */
+#estilos ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+}
+
+#estilos li {
+    background: var(--bg-secondary);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    color: var(--gold-light);
+    border: 1px solid var(--border-gold);
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+#estilos li:hover {
+    border-color: var(--gold-primary);
+    transform: translateY(-5px);
+    background: var(--bg-card);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.15);
+}
+
+/* ==========================================================================
+   Seção Localização & Mapa
+   ========================================================================== */
+
+.localizacao-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.info-estudio {
+    background: var(--bg-secondary);
+    padding: 2.5rem;
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+}
+
+.info-estudio h3 {
+    color: var(--gold-light);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.info-estudio p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.dados-contato {
+    list-style: none;
+}
+
+.dados-contato li {
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.dados-contato li strong {
+    color: var(--gold-primary);
+}
+
+.mapa-container {
+    width: 100%;
+    height: 380px;
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    filter: invert(90%) hue-rotate(180deg) contrast(120%);
+}
+
+/* ==========================================================================
+   Pattern Animado no Fundo da Seção Estilos (Deslizando para a Direita)
+   ========================================================================== */
+
+#estilos {
+    position: relative;
+    overflow: hidden; 
+}
+
+/* Container do fundo */
+.estilos-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; 
+    opacity: 0.04; 
+    user-select: none;
+}
+
+/* Trilho com a textura que desliza */
+.pattern-track-estilos {
+    width: 200%;
+    height: 100%;
+    background-image: url('assets/WelloPatternSemFundo.png'); 
+    background-repeat: repeat-x;
+    background-size: contain;
+    background-position: center;
+    animation: patternMoveRight 40s linear infinite; 
+}
+
+@keyframes patternMoveRight {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+#estilos h2,
+#estilos .estilos-grid {
+    position: relative;
+    z-index: 2;
+}
+
+/* ==========================================================================
+   Agendamento & Formulário
+   ========================================================================== */
+
+#agendamento {
+    text-align: center;
+}
+
+#agendamento p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.btn-whatsapp {
+    margin-bottom: 3.5rem;
+}
+
+#form-orcamento {
+    text-align: left;
+    background: var(--bg-secondary);
+    padding: 2.5rem;
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+#form-orcamento label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    color: var(--gold-light);
+}
+
+#form-orcamento input,
+#form-orcamento textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-gold);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    border-radius: 2px;
+    transition: var(--transition-fast);
+}
+
+#form-orcamento input:focus,
+#form-orcamento textarea:focus {
+    outline: none;
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+}
+
+#form-orcamento button {
+    width: 100%;
+    padding: 1rem;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--gold-gradient);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+#form-orcamento button:hover {
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+    opacity: 0.95;
+}
+
+/* ==========================================================================
+   Efeitos Scroll Reveal Bidirecionais
+   ========================================================================== */
+
+[data-scroll] {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.8s;
+    will-change: opacity, transform, visibility;
+}
+
+[data-scroll].is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 2.5rem;
+    background: #050505;
+    border-top: 1px solid var(--border-gold);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    header {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    nav ul {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #hero h2 {
+        font-size: 2.2rem;
+    }
+
+    section {
+        padding: 4rem 1.2rem;
+    }
+
+    .localizacao-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #form-orcamento {
+        padding: 1.5rem;
+    }
+}
+
+/* ==========================================================================
+   Lightbox / Carrossel Exclusivo com Setas Simplificadas
+   ========================================================================== */
+
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.94);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-content {
+    max-width: 85%;
+    max-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+
+.lightbox-content img.fade-out {
+    opacity: 0;
+    transform: scale(0.96);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: var(--gold-light);
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    z-index: 2010;
+}
+
+.lightbox-close:hover {
+    color: #ffffff;
+}
+
+.lightbox-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent; 
+    border: none;
+    color: var(--gold-light);
+    font-size: 3.5rem; 
+    font-weight: 200;
+    padding: 1rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    z-index: 2005;
+    user-select: none;
+}
+
+.lightbox-btn:hover {
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.15);
+}
+
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+
+.lightbox.single-image .lightbox-btn {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .lightbox-btn {
+        font-size: 2.5rem;
+        padding: 0.5rem;
+    }
+    .lightbox-prev { left: 5px; }
+    .lightbox-next { right: 5px; }
+}
+
+/* ==========================================================================
+   Estilos / Especialidades (Cards Expansíveis & Quadrados)
+   ========================================================================== */
+
+.estilos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: flex-start; 
+}
+
+.estilo-card {
+    flex: 1 1 220px; 
+    max-width: 280px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    
+    transition: flex 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s ease,
+                opacity 0.4s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.estilo-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    color: var(--gold-light);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.estilo-card:hover {
+    border-color: var(--gold-primary);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.15);
+}
+
+.estilo-detalhes {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    text-align: left;
+}
+
+.estilo-detalhes p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 1.2rem 0 1rem 0;
+}
+
+.estilo-detalhes img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border-gold);
+}
+
+/* ==========================================================================
+   Estado Ativo (Card Aberto: Fica bem mais gordo e quadrado)
+   ========================================================================== */
+
+.estilo-card.ativo {
+    flex: 2 1 450px;       
+    max-width: 500px;      
+    min-height: 480px;     
+    border-color: var(--gold-primary);
+    background: var(--bg-card);
+    box-shadow: 0 10px 35px rgba(212, 175, 55, 0.3);
+    z-index: 5;
+    padding: 2.5rem 2rem;
+}
+
+.estilo-card.ativo .estilo-detalhes {
+    max-height: 600px;
+    opacity: 1;
+}
+
+.estilo-card.ativo h3 {
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+.estilos-grid.has-active .estilo-card:not(.ativo) {
+    flex: 0 1 180px;
+    opacity: 0.45;
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .estilo-card.ativo {
+        flex: 1 1 100%;
+        max-width: 100%;
+        min-height: auto;
+    }
+}
+
+/* ==========================================================================
+   Link da Logo e Botão Voltar ao Topo Flutuante
+   ========================================================================== */
+
+header .logo a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.btn-voltar-topo {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 0.8rem 1.4rem;        
+    border-radius: 30px;           
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    color: var(--gold-light);
+    cursor: pointer;
+    z-index: 999;
+    
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;                    
+
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+}
+
+.btn-voltar-topo .seta {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.btn-voltar-topo.visivel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.btn-voltar-topo:hover {
+    background: var(--gold-gradient);
+    color: var(--bg-primary);
+    border-color: var(--gold-primary);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .btn-voltar-topo {
+        bottom: 20px;
+        right: 20px;
+        padding: 0;                
+        width: 42px;               
+        height: 42px;              
+        border-radius: 50%;       
+        justify-content: center;   
+    }
+
+    .btn-voltar-topo .texto {
+        display: none;
+    }
+
+    .btn-voltar-topo .seta {
+        font-size: 1.2rem;
+    }
+}
+
+/* ==========================================================================
+   Botão Ver Galeria Completa
+   ========================================================================== */
+
+.galeria-btn-container {
+    text-align: center;
+    margin-top: 3.5rem;
+}
+
+.galeria-btn-container .btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bg-primary);
+    background: var(--gold-gradient);
+    border-radius: 2px;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+}
+
+.galeria-btn-container .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
+    color: #000;
+}
