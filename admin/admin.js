@@ -251,6 +251,19 @@ const widgetCarrossel = cloudinary.createUploadWidget({
   }
 });
 
+
+// Torna a função globalmente acessível para os botões do HTML
+window.fecharModalCarrossel = function() {
+  const modal = document.getElementById("modalCarrossel");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+  itemIndexCarrosselAtual = null;
+  if (typeof renderizarGaleriaRealTime === "function") {
+    renderizarGaleriaRealTime();
+  }
+};
+
 // Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
   carregarDadosIniciais();
