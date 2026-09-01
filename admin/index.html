@@ -3,16 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Wello Tattoo</title>
-  <!-- Widget do Netlify Identity: cuida do login/sessão -->
+  <title>Painel Wello Tattoo | Área Administrativa</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #141414;
+      --bg-card: #1c1c1c;
+      --gold-primary: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #aa8c2c;
+      --gold-gradient: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%);
+      --text-primary: #ffffff;
+      --text-muted: #b3b3b3;
+      --border-gold: rgba(212, 175, 55, 0.3);
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Montserrat', sans-serif;
+    }
+
+    /* Fundo geral do painel com a cor principal do site */
+    body {
+      background-color: var(--bg-primary) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-body) !important;
+    }
+
+    /* Barra de Navegação Superior do CMS */
+    [data-slate-editor], div[class*="AppHeader"] {
+      background-color: var(--bg-secondary) !important;
+      border-bottom: 1px solid var(--border-gold) !important;
+    }
+
+    /* Títulos e Cabeçalhos do Painel */
+    h1, h2, h3, h4, span[class*="CollectionLabel"] {
+      font-family: var(--font-heading) !important;
+      letter-spacing: 1px;
+    }
+
+    /* Botões Principais no Estilo Dourado do Wello */
+    button[class*="Button"], a[class*="Button"] {
+      background: var(--gold-gradient) !important;
+      color: var(--bg-primary) !important;
+      font-family: var(--font-heading) !important;
+      font-weight: 700 !important;
+      border: none !important;
+      border-radius: 2px !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2) !important;
+    }
+
+    button[class*="Button"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
+    }
+
+    /* Cartões e Blocos de Conteúdo (Coleções e Listas) */
+    div[class*="Card"], div[class*="ControlPane"] {
+      background-color: var(--bg-card) !important;
+      border: 1px solid var(--border-gold) !important;
+      border-radius: 6px !important;
+    }
+
+    /* Campos de Entrada de Texto e Inputs */
+    input, textarea, select {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-gold) !important;
+      border-radius: 4px !important;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--gold-primary) !important;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3) !important;
+    }
+
+    /* Área de Upload de Imagem (Drag & Drop Intuitivo) */
+    div[class*="ImageControl"], div[class*="FileWidget"] {
+      border: 2px dashed var(--gold-primary) !important;
+      background-color: var(--bg-secondary) !important;
+      border-radius: 6px;
+      padding: 15px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <!-- Decap CMS (fork mantido do antigo Netlify CMS) -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
   <script>
-    // Redireciona o widget de login do Identity para dentro do CMS
+    // Redireciona o widget de login do Identity para dentro do CMS automaticamente
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
         if (!user) {
