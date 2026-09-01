@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Wello Tattoo - Decap CMS Admin Custom Stylesheet
+   ========================================================================== */
+
+/* Fundo Geral do Painel */
+body, #nc-root, div[class*="AppHeader"], div[class*="ControlPane"], main {
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Barra Superior de Navegação */
+header[class*="AppHeader"], div[class*="AppHeader"] {
+  background-color: #141414 !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3) !important;
+}
+
+/* Títulos, Rótulos e Textos dos Campos */
+h1, h2, h3, h4, label, [class*="ControlLabel"], [class*="CollectionLabel"], [class*="FieldLabel"] {
+  color: #f3e5ab !important;
+  font-family: 'Cinzel', serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+/* Caixas de Texto, Entradas e Inputs */
+input, textarea, select, [class*="ControlContainer"] input {
+  background-color: #141414 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-radius: 4px !important;
+  padding: 10px !important;
+}
+
+input:focus, textarea:focus {
+  border-color: #d4af37 !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4) !important;
+  outline: none !important;
+}
+
+/* Cartões das Tatuagens e Listas (Substitui o fundo branco da imagem) */
+div[class*="ListControl"], div[class*="ObjectControl"], div[class*="Card"], div[class*="WidgetFolder"], [class*="ListItem"] {
+  background-color: #1c1c1c !important;
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  border-radius: 8px !important;
+  margin-bottom: 15px !important;
+}
+
+/* Barras Superiores dos Itens e Alça de Arrastar (=) */
+div[class*="TopBar"], div[class*="ListControlHeader"], [class*="ItemHeader"] {
+  background-color: #141414 !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+/* Área de Upload / Arrastar e Soltar Fotos (Drag & Drop Intuitivo) */
+div[class*="FileControl"], div[class*="ImageControl"], div[class*="Dropzone"], div[class*="nc-imageControl-dropzone"] {
+  border: 2px dashed #d4af37 !important;
+  background-color: rgba(212, 175, 55, 0.05) !important;
+  border-radius: 8px !important;
+  padding: 25px 15px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+div[class*="FileControl"]:hover, div[class*="ImageControl"]:hover, div[class*="Dropzone"]:hover {
+  background-color: rgba(212, 175, 55, 0.15) !important;
+  border-color: #f3e5ab !important;
+}
+
+/* Botões de Ação (Publicar, Adicionar Foto, Escolher Imagem) */
+button, a[class*="Button"], button[class*="Button"] {
+  background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%) !important;
+  color: #0a0a0a !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 8px 16px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+}
+
+button:hover, a[class*="Button"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
+}
+
+/* Botões de Excluir / Remover */
+button[class*="Delete"], button[class*="Remove"], button[class*="closeButton"] {
+  background: #a32a2a !important;
+  color: #ffffff !important;
+}
