@@ -29,20 +29,6 @@ async function carregarDadosIniciais() {
   iniciarDragAndDrop();
 }
 
-// Substitua os Event Listeners no final do admin.js por este bloco seguro:
-document.addEventListener("DOMContentLoaded", () => {
-  carregarDadosIniciais();
-
-  document.getElementById("btnUpload")?.addEventListener("click", () => myWidget.open());
-  document.getElementById("btnUploadCarrossel")?.addEventListener("click", () => widgetCarrossel.open());
-  document.getElementById("btnSalvarSite")?.addEventListener("click", salvarDiretoNoGithub);
-  document.getElementById("btnAbrirConfig")?.addEventListener("click", abrirConfigModal);
-  document.getElementById("btnFecharConfig")?.addEventListener("click", fecharConfigModal);
-  document.getElementById("btnSalvarConfig")?.addEventListener("click", salvarConfiguracoes);
-  document.getElementById("btnFecharCarrossel")?.addEventListener("click", fecharModalCarrossel);
-  document.getElementById("btnConcluirCarrossel")?.addEventListener("click", fecharModalCarrossel);
-});
-
 // Renderizar Galeria
 function renderizarGaleriaRealTime() {
   const container = document.getElementById("gridPreview");
@@ -295,7 +281,6 @@ const widgetCarrossel = cloudinary.createUploadWidget({
   }
 });
 
-// Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
   carregarDadosIniciais();
 
