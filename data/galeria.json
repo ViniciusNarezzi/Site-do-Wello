@@ -6,7 +6,9 @@
       "destaque": true,
       "carrossel": [
         "assets/image1.png",
-        "assets/image1.1.png"
+        "assets/image1.1.png",
+        "/assets/image1.2.png",
+        "/assets/image1.4.png"
       ]
     },
     {
