@@ -2,7 +2,8 @@
    Wello Tattoo - Lógica do Painel Administrativo
    ========================================================================== */
 
-const REPO_FIXO = "https://github.com/ViniciusNarezzi/Site-do-Wello";
+// Repositório corrigido (sem o prefixo https://github.com/)
+const REPO_FIXO = "ViniciusNarezzi/Site-do-Wello";
 
 let galeriaTrabalhos = [];
 let sortableInstance = null;
@@ -12,10 +13,11 @@ let itemIndexCarrosselAtual = null;
 async function carregarDadosIniciais() {
   try {
     const res = await fetch('../data/galeria.json');
+    if (!res.ok) throw new Error("Arquivo galeria.json não encontrado");
     const data = await res.json();
     galeriaTrabalhos = data.trabalhos || [];
   } catch (err) {
-    console.log("Iniciando galeria vazia...");
+    console.log("Erro ao carregar JSON ou galeria vazia:", err);
   }
   renderizarGaleriaRealTime();
   iniciarDragAndDrop();
@@ -25,6 +27,8 @@ async function carregarDadosIniciais() {
 function renderizarGaleriaRealTime() {
   const container = document.getElementById("gridPreview");
   const countLabel = document.getElementById("fotoCount");
+  if (!container || !countLabel) return;
+
   container.innerHTML = "";
 
   const destaquesAtivos = galeriaTrabalhos.filter(t => t.destaque).length;
@@ -109,11 +113,12 @@ function abrirModalCarrossel(index) {
   document.getElementById("modalCarrossel").classList.add("active");
 }
 
-function fecharModalCarrossel() {
-  document.getElementById("modalCarrossel").classList.remove("active");
+window.fecharModalCarrossel = function() {
+  const modal = document.getElementById("modalCarrossel");
+  if (modal) modal.classList.remove("active");
   itemIndexCarrosselAtual = null;
   renderizarGaleriaRealTime();
-}
+};
 
 function renderizarSubfotosModal() {
   if (itemIndexCarrosselAtual === null) return;
@@ -145,26 +150,41 @@ function removerSubfoto(subIndex) {
   renderizarGaleriaRealTime();
 }
 
+// Modais de Configuração
+function abrirConfigModal() {
+  document.getElementById("cfgRepo").value = REPO_FIXO;
+  document.getElementById("cfgToken").value = localStorage.getItem("wt_gh_token") || "";
+  document.getElementById("modalConfig").classList.add("active");
+}
+
+function fecharConfigModal() {
+  document.getElementById("modalConfig").classList.remove("active");
+}
+
 function salvarConfiguracoes() {
-  const repo = document.getElementById("cfgRepo").value.trim();
   const token = document.getElementById("cfgToken").value.trim();
 
-  if (!repo || !token) {
-    alert("Preencha ambos os campos para salvar.");
+  if (!token) {
+    alert("Insira o seu Personal Access Token do GitHub.");
     return;
   }
 
-  localStorage.setItem("wt_gh_repo", repo);
   localStorage.setItem("wt_gh_token", token);
-  alert("Configurações salvas com sucesso no navegador!");
+  alert("Token salvo no navegador com sucesso!");
   fecharConfigModal();
 }
 
-// Substitua o início da função salvarDiretoNoGithub no admin.js por este bloco:
+// Salvar na API do GitHub
 async function salvarDiretoNoGithub() {
   const token = localStorage.getItem("wt_gh_token");
-  const repo = REPO_FIXO; // Usa o repositório fixo definido no topo
+  const repo = REPO_FIXO;
   const btn = document.getElementById("btnSalvarSite");
+
+  if (!token) {
+    alert("Token do GitHub não configurado! Clique no botão ⚙️ CONFIG no topo e cole seu Personal Access Token.");
+    abrirConfigModal();
+    return;
+  }
 
   btn.innerText = "⏳ SALVANDO NO SITE...";
   btn.disabled = true;
@@ -174,7 +194,10 @@ async function salvarDiretoNoGithub() {
   try {
     let sha = "";
     const resGet = await fetch(url, {
-      headers: { Authorization: `token ${token}` }
+      headers: { 
+        Authorization: `token ${token}`,
+        Accept: "application/vnd.github.v3+json"
+      }
     });
 
     if (resGet.ok) {
@@ -196,16 +219,17 @@ async function salvarDiretoNoGithub() {
       method: "PUT",
       headers: {
         Authorization: `token ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Accept: "application/vnd.github.v3+json"
       },
       body: JSON.stringify(payload)
     });
 
     if (resPut.ok) {
-      alert("✨ Galeria salva com sucesso! Em instantes as alterações estarão visíveis na página inicial.");
+      alert("✨ Galeria salva com sucesso! Em instantes as alterações estarão visíveis no site.");
     } else {
       const errData = await resPut.json();
-      alert("Erro ao salvar: " + (errData.message || "Verifique as configurações do GitHub."));
+      alert("Erro ao salvar: " + (errData.message || "Verifique as permissões do Token do GitHub."));
     }
   } catch (err) {
     alert("Erro de conexão ao salvar no GitHub: " + err.message);
@@ -251,29 +275,16 @@ const widgetCarrossel = cloudinary.createUploadWidget({
   }
 });
 
-
-// Torna a função globalmente acessível para os botões do HTML
-window.fecharModalCarrossel = function() {
-  const modal = document.getElementById("modalCarrossel");
-  if (modal) {
-    modal.classList.remove("active");
-  }
-  itemIndexCarrosselAtual = null;
-  if (typeof renderizarGaleriaRealTime === "function") {
-    renderizarGaleriaRealTime();
-  }
-};
-
 // Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
   carregarDadosIniciais();
 
-  document.getElementById("btnUpload").addEventListener("click", () => myWidget.open());
-  document.getElementById("btnUploadCarrossel").addEventListener("click", () => widgetCarrossel.open());
-  document.getElementById("btnSalvarSite").addEventListener("click", salvarDiretoNoGithub);
-  document.getElementById("btnAbrirConfig").addEventListener("click", abrirConfigModal);
-  document.getElementById("btnFecharConfig").addEventListener("click", fecharConfigModal);
-  document.getElementById("btnSalvarConfig").addEventListener("click", salvarConfiguracoes);
-  document.getElementById("btnFecharCarrossel").addEventListener("click", fecharModalCarrossel);
-  document.getElementById("btnConcluirCarrossel").addEventListener("click", fecharModalCarrossel);
+  document.getElementById("btnUpload")?.addEventListener("click", () => myWidget.open());
+  document.getElementById("btnUploadCarrossel")?.addEventListener("click", () => widgetCarrossel.open());
+  document.getElementById("btnSalvarSite")?.addEventListener("click", salvarDiretoNoGithub);
+  document.getElementById("btnAbrirConfig")?.addEventListener("click", abrirConfigModal);
+  document.getElementById("btnFecharConfig")?.addEventListener("click", fecharConfigModal);
+  document.getElementById("btnSalvarConfig")?.addEventListener("click", salvarConfiguracoes);
+  document.getElementById("btnFecharCarrossel")?.addEventListener("click", fecharModalCarrossel);
+  document.getElementById("btnConcluirCarrossel")?.addEventListener("click", fecharModalCarrossel);
 });
