@@ -125,6 +125,21 @@ body {
   margin-top: 4px;
 }
 
+.btn-modal-concluir {
+  background: var(--gold-gradient) !important;
+  color: #000 !important;
+  border: none !important;
+  width: 100% !important;
+  padding: 12px !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 10 !important;
+  margin-top: 1rem !important;
+}
+
 #fotoCount {
   color: var(--text-muted);
   font-size: 0.85rem;
