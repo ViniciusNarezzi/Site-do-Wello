@@ -1,0 +1,45 @@
+backend:
+  name: git-gateway
+  branch: main   # troque para "master" se for o nome da sua branch principal
+
+# Impede qualquer tentativa de cadastro por fora do convite do Netlify Identity
+local_backend: false
+
+media_folder: "assets"       # pasta onde as imagens enviadas serão salvas no repositório
+public_folder: "/assets"     # caminho usado no HTML/JSON para referenciar as imagens
+
+collections:
+  - name: "galeria"
+    label: "Galeria de Trabalhos"
+    files:
+      - name: "galeria"
+        label: "Trabalhos da Galeria"
+        file: "data/galeria.json"
+        fields:
+          - label: "Trabalhos"
+            name: "trabalhos"
+            widget: "list"
+            label_singular: "Trabalho"
+            summary: "{{fields.alt}}"
+            fields:
+              - label: "Imagem Principal"
+                name: "imagem"
+                widget: "image"
+              - label: "Mostrar na Página Inicial"
+                name: "destaque"
+                widget: "boolean"
+                default: false
+                hint: "Ative para essa foto aparecer na galeria da página inicial (limite de 4 fotos)."
+              - label: "Texto Alternativo (Alt)"
+                name: "alt"
+                widget: "string"
+                required: false
+                hint: "Descrição curta da tatuagem, usada para acessibilidade."
+              - label: "Fotos do Carrossel (opcional, além da principal)"
+                name: "carrossel"
+                widget: "list"
+                required: false
+                field:
+                  label: "Foto"
+                  name: "foto"
+                  widget: "image"
