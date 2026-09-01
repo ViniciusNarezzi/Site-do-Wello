@@ -20,7 +20,7 @@
     {
       "imagem": "assets/image3.png",
       "alt": "Tatuagem por Wello - 3",
-      "destaque": true,
+      "destaque": false,
       "carrossel": [
         "assets/image3.png",
         "assets/image1.1.png"
@@ -37,7 +37,7 @@
     {
       "imagem": "assets/image5.png",
       "alt": "Tatuagem por Wello - 5",
-      "destaque": false,
+      "destaque": true,
       "carrossel": [
         "assets/image5.png"
       ]
