@@ -218,7 +218,7 @@ async function salvarDiretoNoGithub() {
 // Cloudinary Widgets
 const myWidget = cloudinary.createUploadWidget({
   cloudName: 't5fv9sbq',
-  uploadPreset: 'ml_default',
+  uploadPreset: 'u8tea0h6',
   sources: ['local', 'url', 'camera'],
   multiple: false
 }, (error, result) => {
@@ -237,7 +237,7 @@ const myWidget = cloudinary.createUploadWidget({
 
 const widgetCarrossel = cloudinary.createUploadWidget({
   cloudName: 't5fv9sbq',
-  uploadPreset: 'ml_default',
+  uploadPreset: 'u8tea0h6',
   sources: ['local', 'url', 'camera'],
   multiple: true
 }, (error, result) => {
