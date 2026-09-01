@@ -4,49 +4,71 @@
       "imagem": "assets/image1.png",
       "alt": "Tatuagem por Wello - 1",
       "destaque": true,
-      "carrossel": ["assets/image1.png", "assets/image1.1.png"]
+      "carrossel": [
+        "assets/image1.png",
+        "assets/image1.1.png"
+      ]
     },
     {
       "imagem": "assets/image2.png",
       "alt": "Tatuagem por Wello - 2",
       "destaque": true,
-      "carrossel": ["assets/image2.png"]
+      "carrossel": [
+        "assets/image2.png"
+      ]
     },
     {
       "imagem": "assets/image3.png",
       "alt": "Tatuagem por Wello - 3",
       "destaque": true,
-      "carrossel": ["assets/image3.png", "assets/image1.1.png"]
+      "carrossel": [
+        "assets/image3.png",
+        "assets/image1.1.png"
+      ]
     },
     {
       "imagem": "assets/image4.png",
       "alt": "Tatuagem por Wello - 4",
       "destaque": true,
-      "carrossel": ["assets/image4.png"]
+      "carrossel": [
+        "assets/image4.png"
+      ]
     },
     {
       "imagem": "assets/image5.png",
       "alt": "Tatuagem por Wello - 5",
       "destaque": false,
-      "carrossel": ["assets/image5.png"]
+      "carrossel": [
+        "assets/image5.png"
+      ]
     },
     {
       "imagem": "assets/image6.png",
       "alt": "Tatuagem por Wello - 6",
       "destaque": false,
-      "carrossel": ["assets/image6.png"]
+      "carrossel": [
+        "assets/image6.png"
+      ]
     },
     {
       "imagem": "assets/image7.png",
       "alt": "Tatuagem por Wello - 7",
       "destaque": false,
-      "carrossel": ["assets/image7.png"]
+      "carrossel": [
+        "assets/image7.png"
+      ]
     },
     {
       "imagem": "assets/image8.png",
       "alt": "Tatuagem por Wello - 8",
       "destaque": false,
-      "carrossel": ["assets/image8.png"]
+      "carrossel": [
+        "assets/image8.png"
+      ]
+    },
+    {
+      "destaque": false,
+      "imagem": "/assets/17882743239602089945405459285405.jpg"
     }
   ]
 }
