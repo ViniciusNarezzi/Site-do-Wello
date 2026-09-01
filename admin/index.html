@@ -47,18 +47,18 @@
   </main>
 
   <!-- Modal do Carrossel -->
-  <div id="modalCarrossel" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>CARROSSEL DA PUBLICAÇÃO</h3>
-        <span class="modal-close" id="btnFecharCarrossel">&times;</span>
-      </div>
-
-      <div class="upload-box-sub" id="btnUploadCarrossel">+ ADICIONAR FOTO AO CARROSSEL</div>
-      <div class="lista-subfotos" id="listaSubfotos"></div>
-      <button class="btn-modal-concluir" id="btnConcluirCarrossel">CONCLUÍDO</button>
+<div id="modalCarrossel" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>CARROSSEL DA PUBLICAÇÃO</h3>
+      <span class="modal-close" id="btnFecharCarrossel" onclick="fecharModalCarrossel()">&times;</span>
     </div>
+
+    <div class="upload-box-sub" id="btnUploadCarrossel">+ ADICIONAR FOTO AO CARROSSEL</div>
+    <div class="lista-subfotos" id="listaSubfotos"></div>
+    <button class="btn-modal-concluir" id="btnConcluirCarrossel" onclick="fecharModalCarrossel()">CONCLUÍDO</button>
   </div>
+</div>
 
   <!-- Modal de Configuração do GitHub -->
   <div id="modalConfig" class="modal-overlay">
