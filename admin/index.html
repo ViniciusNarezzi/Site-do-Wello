@@ -3,64 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Wello Tattoo | Área Administrativa</title>
-  
-  <!-- Fontes do Site -->
+  <title>Painel Administrativo | Wello Tattoo</title>
+
+  <!-- Fontes Oficiais -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Estilo do Painel Admin -->
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="admin.css">
 
-  <!-- Widget do Netlify Identity -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <!-- Bibliotecas Externas -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 </head>
 <body>
-  <!-- Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-  <script>
-    // Redireciona login do Netlify Identity
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
+  <header>
+    <div class="logo">
+      <a href="../index.html" title="Voltar ao site principal">
+        <h1>Wello Tattoo</h1>
+      </a>
+    </div>
+    <div class="header-actions">
+      <button class="btn-salvar-site" id="btnSalvarSite">✨ SALVAR ALTERAÇÕES NO SITE</button>
+    </div>
+  </header>
 
-    // Registra os estilos dentro do IFRAME da Pré-visualização
-    CMS.registerPreviewStyle("admin.css");
-    CMS.registerPreviewStyle("../style.css");
+  <main class="admin-container">
+    <div class="upload-box" id="btnUpload">
+      <h3>+ ADICIONAR NOVA FOTO PRINCIPAL</h3>
+      <p>Clique ou arraste arquivos para enviar a imagem de capa ao Cloudinary</p>
+    </div>
 
-    // Componente de Pré-Visualização com renderização correta de imagem
-    var GaleriaPreview = createClass({
-      render: function() {
-        var entry = this.props.entry;
-        var getAsset = this.props.getAsset;
-        var trabalhos = entry.getIn(['data', 'trabalhos']);
-        var items = trabalhos ? trabalhos.toJS() : [];
+    <div class="preview-header">
+      <div>
+        <h2>GERENCIADOR DA GALERIA</h2>
+        <p class="preview-sub">Marque até 4 fotos para a Home. Arraste para reordenar.</p>
+      </div>
+      <span id="fotoCount">0 fotos</span>
+    </div>
 
-        return h('div', { style: { padding: '20px', backgroundColor: '#0a0a0a', minHeight: '100vh', color: '#fff' } },
-          h('h2', { style: { textAlign: 'center', color: '#d4af37', fontFamily: 'Cinzel, serif', marginBottom: '10px' } }, 'PRÉ-VISUALIZAÇÃO EM TEMPO REAL'),
-          h('p', { style: { textAlign: 'center', color: '#b3b3b3', fontSize: '13px', marginBottom: '30px' } }, 'Assim é como sua galeria vai aparecer no site principal:'),
-          h('div', { className: 'grid-galeria' },
-            items.map(function(item, index) {
-              var imgSrc = item.imagem ? getAsset(item.imagem).toString() : '';
-              return h('div', { key: index },
-                imgSrc ? h('img', { 
-                  src: imgSrc, 
-                  alt: item.alt || 'Tatuagem Wello Tattoo'
-                }) : h('div', { style: { height: '250px', background: '#1c1c1c', border: '1px dashed #d4af37', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#b3b3b3' } }, 'Sem imagem')
-              );
-            })
-          )
-        );
-      }
-    });
+    <div class="grid-galeria" id="gridPreview"></div>
+  </main>
 
-    CMS.registerPreviewTemplate("galeria", GaleriaPreview);
-  </script>
+  <!-- Modal do Carrossel -->
+  <div id="modalCarrossel" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>CARROSSEL DA PUBLICAÇÃO</h3>
+        <span class="modal-close" id="btnFecharCarrossel">&times;</span>
+      </div>
+
+      <div class="upload-box-sub" id="btnUploadCarrossel">+ ADICIONAR FOTO AO CARROSSEL</div>
+      <div class="lista-subfotos" id="listaSubfotos"></div>
+      <button class="btn-modal-concluir" id="btnConcluirCarrossel">CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- Modal de Configuração do GitHub -->
+  <div id="modalConfig" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>CONFIGURAÇÃO DE ATUALIZAÇÃO</h3>
+        <span class="modal-close" id="btnFecharConfig">&times;</span>
+      </div>
+
+      <p class="modal-desc">Configuração técnica para permitir a publicação automática das fotos no repositório.</p>
+
+      <div class="config-field">
+        <label for="cfgRepo">Repositório do GitHub (ex: usuario/nome-do-repo)</label>
+        <input type="text" id="cfgRepo" placeholder="ex: wello/wello-tattoo">
+      </div>
+
+      <div class="config-field">
+        <label for="cfgToken">GitHub Personal Access Token</label>
+        <input type="password" id="cfgToken" placeholder="ghp_xxxxxxxxxxxx">
+      </div>
+
+      <button class="btn-modal-concluir" id="btnSalvarConfig">SALVAR CONFIGURAÇÃO</button>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
 </body>
 </html>
