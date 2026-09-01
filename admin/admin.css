@@ -1,94 +1,324 @@
 /* ==========================================================================
-   Wello Tattoo - Decap CMS Admin Custom Stylesheet
+   Wello Tattoo - Style Sheet do Painel Admin
    ========================================================================== */
 
-/* Fundo Geral do Painel */
-body, #nc-root, div[class*="AppHeader"], div[class*="ControlPane"], main {
-  background-color: #0a0a0a !important;
-  color: #ffffff !important;
-  font-family: 'Montserrat', sans-serif !important;
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-gold);
+  padding: 1.2rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Barra Superior de Navegação */
-header[class*="AppHeader"], div[class*="AppHeader"] {
-  background-color: #141414 !important;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3) !important;
+header .logo a {
+  text-decoration: none;
 }
 
-/* Títulos, Rótulos e Textos dos Campos */
-h1, h2, h3, h4, label, [class*="ControlLabel"], [class*="CollectionLabel"], [class*="FieldLabel"] {
-  color: #f3e5ab !important;
-  font-family: 'Cinzel', serif !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
+header .logo h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Caixas de Texto, Entradas e Inputs */
-input, textarea, select, [class*="ControlContainer"] input {
-  background-color: #141414 !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(212, 175, 55, 0.4) !important;
-  border-radius: 4px !important;
-  padding: 10px !important;
+.header-actions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
 }
 
-input:focus, textarea:focus {
-  border-color: #d4af37 !important;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4) !important;
-  outline: none !important;
+.btn-salvar-site {
+  background: var(--gold-gradient);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
-/* Cartões das Tatuagens e Listas (Substitui o fundo branco da imagem) */
-div[class*="ListControl"], div[class*="ObjectControl"], div[class*="Card"], div[class*="WidgetFolder"], [class*="ListItem"] {
-  background-color: #1c1c1c !important;
-  border: 1px solid rgba(212, 175, 55, 0.3) !important;
-  border-radius: 8px !important;
-  margin-bottom: 15px !important;
+.btn-salvar-site:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
 }
 
-/* Barras Superiores dos Itens e Alça de Arrastar (=) */
-div[class*="TopBar"], div[class*="ListControlHeader"], [class*="ItemHeader"] {
-  background-color: #141414 !important;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+.btn-config {
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px solid var(--border-gold);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
-/* Área de Upload / Arrastar e Soltar Fotos (Drag & Drop Intuitivo) */
-div[class*="FileControl"], div[class*="ImageControl"], div[class*="Dropzone"], div[class*="nc-imageControl-dropzone"] {
-  border: 2px dashed #d4af37 !important;
-  background-color: rgba(212, 175, 55, 0.05) !important;
-  border-radius: 8px !important;
-  padding: 25px 15px !important;
-  text-align: center !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
+body {
+  background-color: var(--bg-primary);
+  padding-top: 120px;
+  padding-bottom: 4rem;
 }
 
-div[class*="FileControl"]:hover, div[class*="ImageControl"]:hover, div[class*="Dropzone"]:hover {
-  background-color: rgba(212, 175, 55, 0.15) !important;
-  border-color: #f3e5ab !important;
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-/* Botões de Ação (Publicar, Adicionar Foto, Escolher Imagem) */
-button, a[class*="Button"], button[class*="Button"] {
-  background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%) !important;
-  color: #0a0a0a !important;
-  font-family: 'Cinzel', serif !important;
-  font-weight: 700 !important;
-  border: none !important;
-  border-radius: 4px !important;
-  padding: 8px 16px !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  text-transform: uppercase !important;
+.upload-box {
+  border: 2px dashed var(--gold-primary);
+  background: rgba(212, 175, 55, 0.05);
+  border-radius: 8px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 3rem;
+  transition: var(--transition-fast);
 }
 
-button:hover, a[class*="Button"]:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
+.upload-box:hover {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--gold-light);
 }
 
-/* Botões de Excluir / Remover */
-button[class*="Delete"], button[class*="Remove"], button[class*="closeButton"] {
-  background: #a32a2a !important;
-  color: #ffffff !important;
+.upload-box h3 {
+  color: var(--gold-primary);
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-box p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.preview-header {
+  border-bottom: 1px solid var(--border-gold);
+  padding-bottom: 0.8rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-header h2 {
+  font-size: 1.5rem;
+  color: var(--gold-light);
+}
+
+.preview-sub {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+#fotoCount {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.card-actions {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-row {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-destaque {
+  background: #1c1c1c;
+  color: var(--text-muted);
+  border: 1px solid var(--border-gold);
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 600;
+  width: 100%;
+  transition: var(--transition-fast);
+}
+
+.btn-destaque.ativo {
+  background: var(--gold-gradient);
+  color: #000;
+  font-weight: 700;
+  border-color: var(--gold-primary);
+}
+
+.btn-edit-carrossel {
+  background: var(--bg-card);
+  color: var(--gold-light);
+  border: 1px solid var(--border-gold);
+  flex: 1;
+  padding: 6px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.btn-del {
+  background: #8b2635;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+}
+
+.grid-galeria > div {
+  cursor: grab;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.grid-galeria > div:active {
+  cursor: grabbing;
+}
+
+.sortable-ghost {
+  opacity: 0.3;
+  border: 2px dashed var(--gold-primary) !important;
+}
+
+/* Modais */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+  color: var(--gold-light);
+  font-family: var(--font-heading);
+}
+
+.modal-close {
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.modal-desc {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-box-sub {
+  border: 1px dashed var(--gold-primary);
+  background: rgba(212, 175, 55, 0.08);
+  border-radius: 6px;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  color: var(--gold-light);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+}
+
+.lista-subfotos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.subfoto-card {
+  border: 1px solid var(--border-gold);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.subfoto-card img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+
+.btn-modal-concluir {
+  background: var(--gold-gradient);
+  color: #000;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.config-field {
+  margin-bottom: 1.2rem;
+}
+
+.config-field label {
+  display: block;
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.config-field input {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  color: #fff;
+  border-radius: 4px;
 }
