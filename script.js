@@ -65,58 +65,43 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 /* -------------------------------------------------------------
-       4. Carregar Galeria Dinâmica (JSON) e Iniciar Lightbox
-       ------------------------------------------------------------- */
-    async function carregarGaleria() {
-        const gridGaleria = document.querySelector('.grid-galeria');
-        if (!gridGaleria) return;
+   Carregar Galeria Dinâmica (JSON) - Fotos mais recentes primeiro
+   ------------------------------------------------------------- */
+async function carregarGaleria() {
+    const gridGaleria = document.querySelector('.grid-galeria');
+    if (!gridGaleria) return;
 
-        try {
-            // 1. Busca os dados do JSON que o painel CMS atualiza
-            const resposta = await fetch('data/galeria.json');
-            const dados = await resposta.json();
+    try {
+        const resposta = await fetch('data/galeria.json');
+        const dados = await resposta.json();
 
-            // 2. Limpa a galeria para garantir
-            gridGaleria.innerHTML = '';
+        gridGaleria.innerHTML = '';
 
-            // 3. Aplica os filtros definidos no próprio HTML (via atributos data-)
-            let trabalhos = dados.trabalhos;
+        // .slice().reverse() garante que as fotos cadastradas recentemente fiquem no INÍCIO do site
+        const trabalhosInvertidos = [...dados.trabalhos].reverse();
 
-            // Se a grid pedir "data-destaque", mostra só os marcados como destaque no painel
-            if (gridGaleria.dataset.destaque === "true") {
-                trabalhos = trabalhos.filter(trabalho => trabalho.destaque === true);
+        trabalhosInvertidos.forEach(trabalho => {
+            const img = document.createElement('img');
+            img.src = trabalho.imagem;
+            img.alt = trabalho.alt || "Tatuagem por Wello";
+
+            if (trabalho.carrossel && trabalho.carrossel.length > 0) {
+                img.setAttribute('data-carrossel', trabalho.carrossel.join(', '));
+            } else {
+                img.setAttribute('data-carrossel', trabalho.imagem);
             }
 
-            // Se a grid pedir "data-limite", corta a lista nesse número (ex: 4 na home)
-            const limite = parseInt(gridGaleria.dataset.limite, 10);
-            if (!isNaN(limite)) {
-                trabalhos = trabalhos.slice(0, limite);
-            }
+            gridGaleria.appendChild(img);
+        });
 
-            // 4. Monta cada imagem na tela
-            trabalhos.forEach(trabalho => {
-                const img = document.createElement('img');
-                img.src = trabalho.imagem;
-                img.alt = trabalho.alt || "Tatuagem por Wello";
+        // Ativa o lightbox para abrir o carrossel nas fotos
+        iniciarLightbox();
 
-                // Se houver fotos no carrossel cadastradas no painel
-                if (trabalho.carrossel && trabalho.carrossel.length > 0) {
-                    img.setAttribute('data-carrossel', trabalho.carrossel.join(', '));
-                } else {
-                    img.setAttribute('data-carrossel', trabalho.imagem); // Apenas 1 foto
-                }
-
-                gridGaleria.appendChild(img);
-            });
-
-            // 4. Só agora que as imagens existem, ativamos o clique nelas!
-            iniciarLightbox();
-
-        } catch (erro) {
-            console.error("Erro ao carregar a galeria:", erro);
-        }
+    } catch (erro) {
+        console.error("Erro ao carregar a galeria:", erro);
     }
-
+}
+    
     function iniciarLightbox() {
         const galleryImages = document.querySelectorAll(".grid-galeria img");
         const lightbox = document.getElementById("lightbox");
