@@ -65,7 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 /* -------------------------------------------------------------
-   Carregar Galeria Dinâmica (JSON) - Fotos mais recentes primeiro
+   Carregar Galeria Dinâmica do JSON (Filtrando as 4 da Home)
    ------------------------------------------------------------- */
 async function carregarGaleria() {
     const gridGaleria = document.querySelector('.grid-galeria');
@@ -74,13 +74,27 @@ async function carregarGaleria() {
     try {
         const resposta = await fetch('data/galeria.json');
         const dados = await resposta.json();
-
+        
         gridGaleria.innerHTML = '';
+        
+        let listaExibida = dados.trabalhos || [];
 
-        // .slice().reverse() garante que as fotos cadastradas recentemente fiquem no INÍCIO do site
-        const trabalhosInvertidos = [...dados.trabalhos].reverse();
+        // Se estiver na Página Inicial (index.html), filtra apenas as marcadas em destaque
+        const ehPaginaInicial = !window.location.pathname.includes('galeria.html');
 
-        trabalhosInvertidos.forEach(trabalho => {
+        if (ehPaginaInicial) {
+            const fotosDestaque = listaExibida.filter(trabalho => trabalho.destaque === true);
+            
+            // Se houver fotos marcadas em destaque, usa elas (no máximo 4). Se não houver, usa as 4 primeiras.
+            if (fotosDestaque.length > 0) {
+                listaExibida = fotosDestaque.slice(0, 4);
+            } else {
+                listaExibida = listaExibida.slice(0, 4);
+            }
+        }
+
+        // Renderiza as fotos selecionadas na tela
+        listaExibida.forEach(trabalho => {
             const img = document.createElement('img');
             img.src = trabalho.imagem;
             img.alt = trabalho.alt || "Tatuagem por Wello";
@@ -94,14 +108,16 @@ async function carregarGaleria() {
             gridGaleria.appendChild(img);
         });
 
-        // Ativa o lightbox para abrir o carrossel nas fotos
+        // Inicializa o Lightbox para permitir a navegação e o carrossel
         iniciarLightbox();
 
     } catch (erro) {
         console.error("Erro ao carregar a galeria:", erro);
     }
 }
-    
+
+// Executa assim que a página carregar
+document.addEventListener("DOMContentLoaded", carregarGaleria);    
     function iniciarLightbox() {
         const galleryImages = document.querySelectorAll(".grid-galeria img");
         const lightbox = document.getElementById("lightbox");
