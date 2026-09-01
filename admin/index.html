@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Wello Tattoo | Área Administrativa</title>
   
+  <!-- Fontes Oficiais do Site (Cinzel e Montserrat) -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Widget do Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
+  <!-- Estilização do Painel Administrativo no Estilo Wello Tattoo -->
   <style>
     :root {
       --bg-primary: #0a0a0a;
@@ -25,35 +28,36 @@
       --font-body: 'Montserrat', sans-serif;
     }
 
-    /* Fundo geral do painel com a cor principal do site */
+    /* Fundo Geral do CMS */
     body {
       background-color: var(--bg-primary) !important;
       color: var(--text-primary) !important;
       font-family: var(--font-body) !important;
     }
 
-    /* Barra de Navegação Superior do CMS */
-    [data-slate-editor], div[class*="AppHeader"] {
+    /* Barra Superior do CMS */
+    header[class*="AppHeader"], div[class*="AppHeader"] {
       background-color: var(--bg-secondary) !important;
       border-bottom: 1px solid var(--border-gold) !important;
     }
 
-    /* Títulos e Cabeçalhos do Painel */
-    h1, h2, h3, h4, span[class*="CollectionLabel"] {
+    /* Títulos no Painel */
+    h1, h2, h3, h4, label, span[class*="CollectionLabel"] {
       font-family: var(--font-heading) !important;
+      color: var(--gold-light) !important;
       letter-spacing: 1px;
     }
 
-    /* Botões Principais no Estilo Dourado do Wello */
+    /* Botões em Degradê Dourado */
     button[class*="Button"], a[class*="Button"] {
       background: var(--gold-gradient) !important;
-      color: var(--bg-primary) !important;
+      color: #000000 !important;
       font-family: var(--font-heading) !important;
       font-weight: 700 !important;
       border: none !important;
-      border-radius: 2px !important;
-      transition: all 0.3s ease !important;
+      border-radius: 4px !important;
       box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2) !important;
+      transition: all 0.3s ease !important;
     }
 
     button[class*="Button"]:hover {
@@ -61,41 +65,51 @@
       box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
     }
 
-    /* Cartões e Blocos de Conteúdo (Coleções e Listas) */
-    div[class*="Card"], div[class*="ControlPane"] {
+    /* Cartões e Blocos de Formulário */
+    div[class*="ControlPane"], div[class*="Card"], div[class*="Container"] {
       background-color: var(--bg-card) !important;
       border: 1px solid var(--border-gold) !important;
-      border-radius: 6px !important;
+      border-radius: 8px !important;
+      color: var(--text-primary) !important;
     }
 
-    /* Campos de Entrada de Texto e Inputs */
+    /* Inputs e Caixas de Texto */
     input, textarea, select {
       background-color: var(--bg-secondary) !important;
       color: var(--text-primary) !important;
       border: 1px solid var(--border-gold) !important;
       border-radius: 4px !important;
+      padding: 10px !important;
     }
 
     input:focus, textarea:focus {
       border-color: var(--gold-primary) !important;
       box-shadow: 0 0 10px rgba(212, 175, 55, 0.3) !important;
+      outline: none !important;
     }
 
-    /* Área de Upload de Imagem (Drag & Drop Intuitivo) */
-    div[class*="ImageControl"], div[class*="FileWidget"] {
+    /* Área de Upload de Imagem (Drag and Drop Dourado e Intuitivo) */
+    div[class*="FileControl"], div[class*="ImageControl"], div[class*="Dropzone"] {
       border: 2px dashed var(--gold-primary) !important;
-      background-color: var(--bg-secondary) !important;
-      border-radius: 6px;
-      padding: 15px;
-      text-align: center;
+      background-color: rgba(212, 175, 55, 0.05) !important;
+      border-radius: 10px !important;
+      padding: 25px !important;
+      text-align: center !important;
+      transition: all 0.3s ease !important;
+    }
+
+    div[class*="FileControl"]:hover, div[class*="ImageControl"]:hover {
+      background-color: rgba(212, 175, 55, 0.12) !important;
+      border-color: var(--gold-light) !important;
     }
   </style>
 </head>
 <body>
+  <!-- Decap CMS Script -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
   <script>
-    // Redireciona o widget de login do Identity para dentro do CMS automaticamente
+    // Redirecionamento de Login do Netlify Identity
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
         if (!user) {
@@ -105,6 +119,40 @@
         }
       });
     }
+
+    // Aplica o CSS do site no painel de pré-visualização
+    CMS.registerPreviewStyle("../style.css");
+
+    // Componente que desenha a pré-visualização em tempo real da galeria no painel
+    var GaleriaPreview = createClass({
+      render: function() {
+        var entry = this.props.entry;
+        var trabalhos = entry.getIn(['data', 'trabalhos']);
+        var items = trabalhos ? trabalhos.toJS() : [];
+
+        // Inverte no preview para bater com o comportamento do site (mais recentes primeiro)
+        var itemsInvertidos = items.slice().reverse();
+
+        return h('div', { style: { padding: '20px', backgroundColor: '#0a0a0a', minHeight: '100vh', color: '#fff' } },
+          h('h2', { style: { textAlign: 'center', color: '#d4af37', fontFamily: 'Cinzel, serif', marginBottom: '10px' } }, 'Pré-visualização em Tempo Real'),
+          h('p', { style: { textAlign: 'center', color: '#b3b3b3', fontSize: '13px', marginBottom: '30px' } }, 'Assim é como sua galeria vai aparecer no site principal:'),
+          h('div', { className: 'grid-galeria' },
+            itemsInvertidos.map(function(item, index) {
+              return h('div', { key: index, style: { position: 'relative' } },
+                item.imagem ? h('img', { 
+                  src: item.imagem, 
+                  alt: item.alt || 'Tatuagem Wello',
+                  style: { width: '100%', height: '380px', objectFit: 'cover', borderRadius: '18px', border: '1px solid rgba(212, 175, 55, 0.3)' }
+                }) : h('div', { style: { height: '200px', background: '#1c1c1c', border: '1px dashed #d4af37', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#b3b3b3' } }, 'Sem imagem')
+              );
+            })
+          )
+        );
+      }
+    });
+
+    // Registra o template de visualização para a galeria
+    CMS.registerPreviewTemplate("galeria", GaleriaPreview);
   </script>
 </body>
 </html>
