@@ -2,6 +2,9 @@ backend:
   name: git-gateway
   branch: main   # troque para "master" se for o nome da sua branch principal
 
+# Injeta o CSS customizado na interface do admin[cite: 5]
+css: "/admin/admin.css"
+
 # Impede qualquer tentativa de cadastro por fora do convite do Netlify Identity
 local_backend: false
 
