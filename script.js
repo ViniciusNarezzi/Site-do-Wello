@@ -65,92 +65,149 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 /* -------------------------------------------------------------
-   4. Lightbox / Carrossel Exclusivo Por Imagem (Com Transição Suave)
-   ------------------------------------------------------------- */
-const galleryImages = document.querySelectorAll(".grid-galeria img");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
-const closeBtn = document.querySelector(".lightbox-close");
-const prevBtn = document.querySelector(".lightbox-prev");
-const nextBtn = document.querySelector(".lightbox-next");
+       4. Carregar Galeria Dinâmica (JSON) e Iniciar Lightbox
+       ------------------------------------------------------------- */
+    async function carregarGaleria() {
+        const gridGaleria = document.querySelector('.grid-galeria');
+        if (!gridGaleria) return;
 
-let currentCarouselList = []; 
-let currentImageIndex = 0;   
+        try {
+            // 1. Busca os dados do JSON que o painel CMS atualiza
+            const resposta = await fetch('data/galeria.json');
+            const dados = await resposta.json();
 
-if (galleryImages.length > 0 && lightbox) {
+            // 2. Limpa a galeria para garantir
+            gridGaleria.innerHTML = '';
 
-    // Função para trocar a imagem com efeito suave
-    const changeImage = (newIndex) => {
-        lightboxImg.classList.add("fade-out"); // Começa a sumir suavemente
-        
-        setTimeout(() => {
-            currentImageIndex = newIndex;
-            lightboxImg.src = currentCarouselList[currentImageIndex];
-            lightboxImg.classList.remove("fade-out"); // Reaparece com a nova foto
-        }, 200); // Tempo da transição (em milissegundos)
-    };
+            // 3. Aplica os filtros definidos no próprio HTML (via atributos data-)
+            let trabalhos = dados.trabalhos;
 
-    const openLightbox = (imgElement) => {
-        const rawData = imgElement.getAttribute("data-carrossel");
-        
-        if (rawData) {
-            currentCarouselList = rawData.split(",").map(url => url.trim());
-        } else {
-            currentCarouselList = [imgElement.src];
+            // Se a grid pedir "data-destaque", mostra só os marcados como destaque no painel
+            if (gridGaleria.dataset.destaque === "true") {
+                trabalhos = trabalhos.filter(trabalho => trabalho.destaque === true);
+            }
+
+            // Se a grid pedir "data-limite", corta a lista nesse número (ex: 4 na home)
+            const limite = parseInt(gridGaleria.dataset.limite, 10);
+            if (!isNaN(limite)) {
+                trabalhos = trabalhos.slice(0, limite);
+            }
+
+            // 4. Monta cada imagem na tela
+            trabalhos.forEach(trabalho => {
+                const img = document.createElement('img');
+                img.src = trabalho.imagem;
+                img.alt = trabalho.alt || "Tatuagem por Wello";
+
+                // Se houver fotos no carrossel cadastradas no painel
+                if (trabalho.carrossel && trabalho.carrossel.length > 0) {
+                    img.setAttribute('data-carrossel', trabalho.carrossel.join(', '));
+                } else {
+                    img.setAttribute('data-carrossel', trabalho.imagem); // Apenas 1 foto
+                }
+
+                gridGaleria.appendChild(img);
+            });
+
+            // 4. Só agora que as imagens existem, ativamos o clique nelas!
+            iniciarLightbox();
+
+        } catch (erro) {
+            console.error("Erro ao carregar a galeria:", erro);
         }
+    }
 
-        currentImageIndex = 0;
-        lightboxImg.src = currentCarouselList[currentImageIndex];
-        lightboxImg.classList.remove("fade-out");
-        lightbox.classList.add("active");
-        document.body.style.overflow = "hidden"; 
+    function iniciarLightbox() {
+        const galleryImages = document.querySelectorAll(".grid-galeria img");
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const closeBtn = document.querySelector(".lightbox-close");
+        const prevBtn = document.querySelector(".lightbox-prev");
+        const nextBtn = document.querySelector(".lightbox-next");
 
-        if (currentCarouselList.length <= 1) {
-            lightbox.classList.add("single-image");
-        } else {
-            lightbox.classList.remove("single-image");
+        let currentCarouselList = []; 
+        let currentImageIndex = 0;   
+
+        if (galleryImages.length > 0 && lightbox) {
+            const openLightbox = (imgElement) => {
+                const rawData = imgElement.getAttribute("data-carrossel");
+                if (rawData) {
+                    currentCarouselList = rawData.split(",").map(url => url.trim());
+                } else {
+                    currentCarouselList = [imgElement.src];
+                }
+
+                currentImageIndex = 0;
+                lightboxImg.src = currentCarouselList[currentImageIndex];
+                
+                // Reset de animação para garantir que a imagem não suma
+                lightboxImg.style.opacity = 1; 
+                lightboxImg.style.transform = "scale(1)";
+
+                lightbox.classList.add("active");
+                document.body.style.overflow = "hidden"; 
+
+                if (currentCarouselList.length <= 1) {
+                    lightbox.classList.add("single-image");
+                } else {
+                    lightbox.classList.remove("single-image");
+                }
+            };
+
+            const closeLightbox = () => {
+                lightbox.classList.remove("active");
+                document.body.style.overflow = "auto";
+            };
+
+            const showNext = () => {
+                if (currentCarouselList.length <= 1) return;
+                currentImageIndex = (currentImageIndex + 1) % currentCarouselList.length;
+                
+                // Pequeno efeito de transição ao trocar de foto
+                lightboxImg.style.opacity = 0.5;
+                setTimeout(() => {
+                    lightboxImg.src = currentCarouselList[currentImageIndex];
+                    lightboxImg.style.opacity = 1;
+                }, 150);
+            };
+
+            const showPrev = () => {
+                if (currentCarouselList.length <= 1) return;
+                currentImageIndex = (currentImageIndex - 1 + currentCarouselList.length) % currentCarouselList.length;
+                
+                lightboxImg.style.opacity = 0.5;
+                setTimeout(() => {
+                    lightboxImg.src = currentCarouselList[currentImageIndex];
+                    lightboxImg.style.opacity = 1;
+                }, 150);
+            };
+
+            galleryImages.forEach((img) => {
+                img.style.cursor = "pointer";
+                img.addEventListener("click", () => openLightbox(img));
+            });
+
+            if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+            if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); showNext(); });
+            if (prevBtn) prevBtn.addEventListener("click", (e) => { e.stopPropagation(); showPrev(); });
+
+            lightbox.addEventListener("click", (e) => {
+                if (e.target === lightbox || e.target.classList.contains("lightbox-content")) {
+                    closeLightbox();
+                }
+            });
+
+            document.addEventListener("keydown", (e) => {
+                if (!lightbox.classList.contains("active")) return;
+                if (e.key === "Escape") closeLightbox();
+                if (e.key === "ArrowRight") showNext();
+                if (e.key === "ArrowLeft") showPrev();
+            });
         }
-    };
+    }
 
-    const closeLightbox = () => {
-        lightbox.classList.remove("active");
-        document.body.style.overflow = "auto";
-    };
-
-    const showNext = () => {
-        if (currentCarouselList.length <= 1) return;
-        const nextIndex = (currentImageIndex + 1) % currentCarouselList.length;
-        changeImage(nextIndex);
-    };
-
-    const showPrev = () => {
-        if (currentCarouselList.length <= 1) return;
-        const prevIndex = (currentImageIndex - 1 + currentCarouselList.length) % currentCarouselList.length;
-        changeImage(prevIndex);
-    };
-
-    galleryImages.forEach((img) => {
-        img.style.cursor = "pointer";
-        img.addEventListener("click", () => openLightbox(img));
-    });
-
-    if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
-    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); showNext(); });
-    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.stopPropagation(); showPrev(); });
-
-    lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox || e.target.classList.contains("lightbox-content")) {
-            closeLightbox();
-        }
-    });
-
-    document.addEventListener("keydown", (e) => {
-        if (!lightbox.classList.contains("active")) return;
-        if (e.key === "Escape") closeLightbox();
-        if (e.key === "ArrowRight") showNext();
-        if (e.key === "ArrowLeft") showPrev();
-    });
-} 
+    // Manda o JavaScript carregar as fotos assim que a página abrir
+    carregarGaleria();
 
 /* -------------------------------------------------------------
    5. Interação dos Cards de Estilos (Expansão e Foco)
