@@ -1,13 +1,3 @@
 {
-  "trabalhos": [
-    {
-      "imagem": "assets/image1.png",
-      "alt": "Tatuagem por Wello - 1",
-      "destaque": true,
-      "carrossel": [
-        "/assets/image1.2.png",
-        "/assets/image1.4.png"
-      ]
-    }
-  ]
+  "trabalhos": []
 }
