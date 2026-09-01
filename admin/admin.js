@@ -9,19 +9,39 @@ let galeriaTrabalhos = [];
 let sortableInstance = null;
 let itemIndexCarrosselAtual = null;
 
-// Inicialização de Dados
+// Substitua a função carregarDadosIniciais por esta versão:
 async function carregarDadosIniciais() {
   try {
-    const res = await fetch('../data/galeria.json');
-    if (!res.ok) throw new Error("Arquivo galeria.json não encontrado");
-    const data = await res.json();
-    galeriaTrabalhos = data.trabalhos || [];
+    // Busca os dados diretamente do GitHub com um parâmetro para evitar cache do navegador
+    const res = await fetch(`https://raw.githubusercontent.com/${REPO_FIXO}/main/data/galeria.json?timestamp=${Date.now()}`);
+    if (res.ok) {
+      const data = await res.json();
+      galeriaTrabalhos = data.trabalhos || [];
+    } else {
+      const resLocal = await fetch('../data/galeria.json');
+      const dataLocal = await resLocal.json();
+      galeriaTrabalhos = dataLocal.trabalhos || [];
+    }
   } catch (err) {
-    console.log("Erro ao carregar JSON ou galeria vazia:", err);
+    console.log("Erro ao carregar dados do GitHub:", err);
   }
   renderizarGaleriaRealTime();
   iniciarDragAndDrop();
 }
+
+// Substitua os Event Listeners no final do admin.js por este bloco seguro:
+document.addEventListener("DOMContentLoaded", () => {
+  carregarDadosIniciais();
+
+  document.getElementById("btnUpload")?.addEventListener("click", () => myWidget.open());
+  document.getElementById("btnUploadCarrossel")?.addEventListener("click", () => widgetCarrossel.open());
+  document.getElementById("btnSalvarSite")?.addEventListener("click", salvarDiretoNoGithub);
+  document.getElementById("btnAbrirConfig")?.addEventListener("click", abrirConfigModal);
+  document.getElementById("btnFecharConfig")?.addEventListener("click", fecharConfigModal);
+  document.getElementById("btnSalvarConfig")?.addEventListener("click", salvarConfiguracoes);
+  document.getElementById("btnFecharCarrossel")?.addEventListener("click", fecharModalCarrossel);
+  document.getElementById("btnConcluirCarrossel")?.addEventListener("click", fecharModalCarrossel);
+});
 
 // Renderizar Galeria
 function renderizarGaleriaRealTime() {
