@@ -33,21 +33,41 @@ function escapeHtml(texto) {
    -------------------------------------------------------------------- */
 async function carregarDadosIniciais() {
   const repo = getRepo();
-  try {
-    const res = await fetch(`https://raw.githubusercontent.com/${repo}/main/data/galeria.json?t=${Date.now()}`);
-    if (!res.ok) throw new Error(`GitHub retornou status ${res.status}`);
-    const data = await res.json();
-    galeriaTrabalhos = data.trabalhos || [];
-  } catch (err) {
-    console.warn("Não consegui buscar do GitHub, tentando arquivo local:", err);
+  const token = getToken();
+
+  // Se já tem token salvo, usa a API autenticada do GitHub — funciona
+  // mesmo com repositório privado (o link "raw" público não funciona
+  // nesse caso, então nem tentamos ele quando há token).
+  if (token) {
     try {
-      const resLocal = await fetch('../data/galeria.json');
-      const dataLocal = await resLocal.json();
-      galeriaTrabalhos = dataLocal.trabalhos || [];
-    } catch (err2) {
-      console.error("Também não consegui carregar o arquivo local:", err2);
-      galeriaTrabalhos = [];
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/data/galeria.json`, {
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: "application/vnd.github.v3+json"
+        }
+      });
+      if (!res.ok) throw new Error(`API do GitHub retornou status ${res.status}`);
+      const dataApi = await res.json();
+      const conteudo = decodeURIComponent(escape(atob(dataApi.content)));
+      const data = JSON.parse(conteudo);
+      galeriaTrabalhos = data.trabalhos || [];
+      renderizarGaleriaRealTime();
+      iniciarDragAndDrop();
+      return;
+    } catch (err) {
+      console.warn("Não consegui buscar via API autenticada do GitHub, tentando arquivo local:", err);
     }
+  }
+
+  // Sem token ainda (primeiro uso) ou API falhou: tenta o arquivo local
+  // (funciona quando o painel está servido junto do resto do site).
+  try {
+    const resLocal = await fetch('../data/galeria.json');
+    const dataLocal = await resLocal.json();
+    galeriaTrabalhos = dataLocal.trabalhos || [];
+  } catch (err2) {
+    console.error("Também não consegui carregar o arquivo local:", err2);
+    galeriaTrabalhos = [];
   }
   renderizarGaleriaRealTime();
   iniciarDragAndDrop();
