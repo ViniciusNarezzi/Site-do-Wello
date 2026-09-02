@@ -17,13 +17,15 @@
     {
       "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788304617/x02day9xa8ib5utbg4uj.png",
       "alt": "Tatuagem por Wello",
-      "destaque": true,
-      "carrossel": []
+      "destaque": false,
+      "carrossel": [
+        "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788312420/hkxbltiwuuxglensfajh.png"
+      ]
     },
     {
       "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788304603/qh4tlokixccdpv1uco8d.png",
       "alt": "Tatuagem por Wello",
-      "destaque": false,
+      "destaque": true,
       "carrossel": []
     },
     {
