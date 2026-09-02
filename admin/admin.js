@@ -1,35 +1,61 @@
 /* ==========================================================================
-   Wello Tattoo - Lógica do Painel Administrativo
+   Wello Tattoo - Lógica do Painel Administrativo (revisado)
    ========================================================================== */
 
-// Repositório corrigido (sem o prefixo https://github.com/)
-const REPO_FIXO = "ViniciusNarezzi/Site-do-Wello";
+const REPO_PADRAO = "ViniciusNarezzi/Site-do-Wello";
+const CLOUD_NAME = "t5fv9sbq";
+const UPLOAD_PRESET = "u8tea0h6";
 
 let galeriaTrabalhos = [];
 let sortableInstance = null;
 let itemIndexCarrosselAtual = null;
+let myWidget = null;
+let widgetCarrossel = null;
 
-// Substitua a função carregarDadosIniciais por esta versão:
+/* --------------------------------------------------------------------
+   Config (repositório + token) — agora lidos de verdade do formulário
+   -------------------------------------------------------------------- */
+function getRepo() {
+  return localStorage.getItem("wt_gh_repo") || REPO_PADRAO;
+}
+function getToken() {
+  return localStorage.getItem("wt_gh_token") || "";
+}
+
+function escapeHtml(texto) {
+  const div = document.createElement("div");
+  div.textContent = texto ?? "";
+  return div.innerHTML;
+}
+
+/* --------------------------------------------------------------------
+   Carregar dados existentes (GitHub primeiro, arquivo local como backup)
+   -------------------------------------------------------------------- */
 async function carregarDadosIniciais() {
+  const repo = getRepo();
   try {
-    // Busca os dados diretamente do GitHub com um parâmetro para evitar cache do navegador
-    const res = await fetch(`https://raw.githubusercontent.com/${REPO_FIXO}/main/data/galeria.json?timestamp=${Date.now()}`);
-    if (res.ok) {
-      const data = await res.json();
-      galeriaTrabalhos = data.trabalhos || [];
-    } else {
+    const res = await fetch(`https://raw.githubusercontent.com/${repo}/main/data/galeria.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`GitHub retornou status ${res.status}`);
+    const data = await res.json();
+    galeriaTrabalhos = data.trabalhos || [];
+  } catch (err) {
+    console.warn("Não consegui buscar do GitHub, tentando arquivo local:", err);
+    try {
       const resLocal = await fetch('../data/galeria.json');
       const dataLocal = await resLocal.json();
       galeriaTrabalhos = dataLocal.trabalhos || [];
+    } catch (err2) {
+      console.error("Também não consegui carregar o arquivo local:", err2);
+      galeriaTrabalhos = [];
     }
-  } catch (err) {
-    console.log("Erro ao carregar dados do GitHub:", err);
   }
   renderizarGaleriaRealTime();
   iniciarDragAndDrop();
 }
 
-// Renderizar Galeria
+/* --------------------------------------------------------------------
+   Renderizar Galeria
+   -------------------------------------------------------------------- */
 function renderizarGaleriaRealTime() {
   const container = document.getElementById("gridPreview");
   const countLabel = document.getElementById("fotoCount");
@@ -41,7 +67,7 @@ function renderizarGaleriaRealTime() {
   countLabel.textContent = `${galeriaTrabalhos.length} foto(s) | ${destaquesAtivos}/4 no destaque da Home`;
 
   if (galeriaTrabalhos.length === 0) {
-    container.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Nenhuma foto cadastrada.</p>`;
+    container.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Nenhuma foto cadastrada ainda. Clique em "+ Adicionar Nova Foto Principal" acima.</p>`;
     return;
   }
 
@@ -54,7 +80,7 @@ function renderizarGaleriaRealTime() {
     const qtdCarrossel = trabalho.carrossel ? trabalho.carrossel.length : 0;
 
     item.innerHTML = `
-      <img src="${trabalho.imagem}" alt="${trabalho.alt || 'Tatuagem Wello'}">
+      <img src="${escapeHtml(trabalho.imagem)}" alt="${escapeHtml(trabalho.alt || 'Tatuagem Wello')}">
       <div class="card-actions">
         <button class="btn-destaque ${isDestaque ? 'ativo' : ''}" onclick="toggleDestaque(${index})">
           ${isDestaque ? '★ NA HOME (DESTAQUE)' : '☆ MOSTRAR NA HOME'}
@@ -69,7 +95,9 @@ function renderizarGaleriaRealTime() {
   });
 }
 
-// Alterar Destaque
+/* --------------------------------------------------------------------
+   Alterar Destaque
+   -------------------------------------------------------------------- */
 function toggleDestaque(index) {
   const atualmenteDestaque = galeriaTrabalhos[index].destaque;
   const totalDestaques = galeriaTrabalhos.filter(t => t.destaque).length;
@@ -83,10 +111,17 @@ function toggleDestaque(index) {
   renderizarGaleriaRealTime();
 }
 
-// Drag & Drop
+/* --------------------------------------------------------------------
+   Drag & Drop
+   -------------------------------------------------------------------- */
 function iniciarDragAndDrop() {
   const container = document.getElementById("gridPreview");
   if (!container) return;
+
+  if (typeof Sortable === "undefined") {
+    console.warn("Biblioteca Sortable não carregou — reordenar por arrastar não vai funcionar, mas o resto do painel segue normal.");
+    return;
+  }
 
   if (sortableInstance) sortableInstance.destroy();
 
@@ -103,7 +138,9 @@ function iniciarDragAndDrop() {
   });
 }
 
-// Remover Publicação
+/* --------------------------------------------------------------------
+   Remover Publicação
+   -------------------------------------------------------------------- */
 function removerFoto(index) {
   if (confirm("Deseja remover esta publicação inteira da galeria?")) {
     galeriaTrabalhos.splice(index, 1);
@@ -111,7 +148,9 @@ function removerFoto(index) {
   }
 }
 
-// Modal do Carrossel
+/* --------------------------------------------------------------------
+   Modal do Carrossel
+   -------------------------------------------------------------------- */
 function abrirModalCarrossel(index) {
   itemIndexCarrosselAtual = index;
   if (!galeriaTrabalhos[index].carrossel) galeriaTrabalhos[index].carrossel = [];
@@ -119,7 +158,7 @@ function abrirModalCarrossel(index) {
   document.getElementById("modalCarrossel").classList.add("active");
 }
 
-window.fecharModalCarrossel = function() {
+window.fecharModalCarrossel = function () {
   const modal = document.getElementById("modalCarrossel");
   if (modal) modal.classList.remove("active");
   itemIndexCarrosselAtual = null;
@@ -142,7 +181,7 @@ function renderizarSubfotosModal() {
     const subCard = document.createElement("div");
     subCard.className = "subfoto-card";
     subCard.innerHTML = `
-      <img src="${subImgUrl}">
+      <img src="${escapeHtml(subImgUrl)}">
       <button class="btn-del" style="width: 100%;" onclick="removerSubfoto(${subIndex})">REMOVER</button>
     `;
     container.appendChild(subCard);
@@ -156,10 +195,12 @@ function removerSubfoto(subIndex) {
   renderizarGaleriaRealTime();
 }
 
-// Modais de Configuração
+/* --------------------------------------------------------------------
+   Modal de Configuração (repositório + token)
+   -------------------------------------------------------------------- */
 function abrirConfigModal() {
-  document.getElementById("cfgRepo").value = REPO_FIXO;
-  document.getElementById("cfgToken").value = localStorage.getItem("wt_gh_token") || "";
+  document.getElementById("cfgRepo").value = getRepo();
+  document.getElementById("cfgToken").value = getToken();
   document.getElementById("modalConfig").classList.add("active");
 }
 
@@ -168,22 +209,30 @@ function fecharConfigModal() {
 }
 
 function salvarConfiguracoes() {
+  const repo = document.getElementById("cfgRepo").value.trim();
   const token = document.getElementById("cfgToken").value.trim();
 
+  if (!repo || !repo.includes("/")) {
+    alert("Repositório inválido. Use o formato usuario/nome-do-repositorio (ex: ViniciusNarezzi/Site-do-Wello).");
+    return;
+  }
   if (!token) {
     alert("Insira o seu Personal Access Token do GitHub.");
     return;
   }
 
+  localStorage.setItem("wt_gh_repo", repo);
   localStorage.setItem("wt_gh_token", token);
-  alert("Token salvo no navegador com sucesso!");
+  alert("Configuração salva com sucesso!");
   fecharConfigModal();
 }
 
-// Salvar na API do GitHub
+/* --------------------------------------------------------------------
+   Salvar na API do GitHub
+   -------------------------------------------------------------------- */
 async function salvarDiretoNoGithub() {
-  const token = localStorage.getItem("wt_gh_token");
-  const repo = REPO_FIXO;
+  const token = getToken();
+  const repo = getRepo();
   const btn = document.getElementById("btnSalvarSite");
 
   if (!token) {
@@ -192,6 +241,7 @@ async function salvarDiretoNoGithub() {
     return;
   }
 
+  const textoOriginal = btn.innerText;
   btn.innerText = "⏳ SALVANDO NO SITE...";
   btn.disabled = true;
 
@@ -200,7 +250,7 @@ async function salvarDiretoNoGithub() {
   try {
     let sha = "";
     const resGet = await fetch(url, {
-      headers: { 
+      headers: {
         Authorization: `token ${token}`,
         Accept: "application/vnd.github.v3+json"
       }
@@ -209,6 +259,8 @@ async function salvarDiretoNoGithub() {
     if (resGet.ok) {
       const dataGet = await resGet.json();
       sha = dataGet.sha;
+    } else if (resGet.status !== 404) {
+      throw new Error(`Não consegui ler o arquivo atual no GitHub (status ${resGet.status}). Confira o repositório e o token.`);
     }
 
     const novoConteudoJson = JSON.stringify({ trabalhos: galeriaTrabalhos }, null, 2);
@@ -234,58 +286,117 @@ async function salvarDiretoNoGithub() {
     if (resPut.ok) {
       alert("✨ Galeria salva com sucesso! Em instantes as alterações estarão visíveis no site.");
     } else {
-      const errData = await resPut.json();
-      alert("Erro ao salvar: " + (errData.message || "Verifique as permissões do Token do GitHub."));
+      const errData = await resPut.json().catch(() => ({}));
+      alert("Erro ao salvar: " + (errData.message || `status ${resPut.status}`) + "\n\nVerifique se o token tem permissão de escrita (repo) e se o repositório/branch estão corretos.");
     }
   } catch (err) {
     alert("Erro de conexão ao salvar no GitHub: " + err.message);
   } finally {
-    btn.innerText = "✨ SALVAR ALTERAÇÕES NO SITE";
+    btn.innerText = textoOriginal;
     btn.disabled = false;
   }
 }
 
-// Cloudinary Widgets
-const myWidget = cloudinary.createUploadWidget({
-  cloudName: 't5fv9sbq',
-  uploadPreset: 'u8tea0h6',
-  sources: ['local', 'url', 'camera'],
-  multiple: false
-}, (error, result) => {
-  if (!error && result && result.event === "success") {
-    const totalDestaques = galeriaTrabalhos.filter(t => t.destaque).length;
-    const novaFoto = {
-      imagem: result.info.secure_url,
-      alt: "Tatuagem por Wello",
-      destaque: totalDestaques < 4,
-      carrossel: []
-    };
-    galeriaTrabalhos.unshift(novaFoto);
-    renderizarGaleriaRealTime();
-  }
-});
+/* --------------------------------------------------------------------
+   Cloudinary — criação dos widgets (só chamada se a lib carregou)
+   -------------------------------------------------------------------- */
+function criarWidgetPrincipal() {
+  return cloudinary.createUploadWidget({
+    cloudName: CLOUD_NAME,
+    uploadPreset: UPLOAD_PRESET,
+    sources: ['local', 'url', 'camera'],
+    multiple: false
+  }, (error, result) => {
+    if (error) {
+      console.error("Erro no upload (Cloudinary):", error);
+      alert(
+        "Não foi possível enviar a foto.\n\n" +
+        `Confira se o Upload Preset "${UPLOAD_PRESET}" existe na sua conta Cloudinary e está configurado como "Unsigned" ` +
+        "(Cloudinary > Settings > Upload > Upload presets).\n\n" +
+        "Detalhe técnico: " + (error.statusText || error.message || JSON.stringify(error))
+      );
+      return;
+    }
+    if (result && result.event === "success") {
+      const totalDestaques = galeriaTrabalhos.filter(t => t.destaque).length;
+      const novaFoto = {
+        imagem: result.info.secure_url,
+        alt: "Tatuagem por Wello",
+        destaque: totalDestaques < 4,
+        carrossel: []
+      };
+      galeriaTrabalhos.unshift(novaFoto);
+      renderizarGaleriaRealTime();
+    }
+  });
+}
 
-const widgetCarrossel = cloudinary.createUploadWidget({
-  cloudName: 't5fv9sbq',
-  uploadPreset: 'u8tea0h6',
-  sources: ['local', 'url', 'camera'],
-  multiple: true
-}, (error, result) => {
-  if (!error && result && result.event === "success") {
-    if (itemIndexCarrosselAtual !== null) {
-      if (!galeriaTrabalhos[itemIndexCarrosselAtual].carrossel) galeriaTrabalhos[itemIndexCarrosselAtual].carrossel = [];
+function criarWidgetCarrossel() {
+  return cloudinary.createUploadWidget({
+    cloudName: CLOUD_NAME,
+    uploadPreset: UPLOAD_PRESET,
+    sources: ['local', 'url', 'camera'],
+    multiple: true
+  }, (error, result) => {
+    if (error) {
+      console.error("Erro no upload do carrossel (Cloudinary):", error);
+      alert(
+        "Não foi possível enviar a foto do carrossel.\n\n" +
+        `Confira se o Upload Preset "${UPLOAD_PRESET}" está configurado como "Unsigned" no Cloudinary.\n\n` +
+        "Detalhe técnico: " + (error.statusText || error.message || JSON.stringify(error))
+      );
+      return;
+    }
+    if (result && result.event === "success" && itemIndexCarrosselAtual !== null) {
+      if (!galeriaTrabalhos[itemIndexCarrosselAtual].carrossel) {
+        galeriaTrabalhos[itemIndexCarrosselAtual].carrossel = [];
+      }
       galeriaTrabalhos[itemIndexCarrosselAtual].carrossel.push(result.info.secure_url);
       renderizarSubfotosModal();
       renderizarGaleriaRealTime();
     }
-  }
-});
+  });
+}
 
+/* --------------------------------------------------------------------
+   Inicialização — tudo dentro do DOMContentLoaded e com verificações,
+   para que uma falha de rede/CDN não trave o painel inteiro.
+   -------------------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   carregarDadosIniciais();
 
-  document.getElementById("btnUpload")?.addEventListener("click", () => myWidget.open());
-  document.getElementById("btnUploadCarrossel")?.addEventListener("click", () => widgetCarrossel.open());
+  const btnUpload = document.getElementById("btnUpload");
+  const btnUploadCarrossel = document.getElementById("btnUploadCarrossel");
+
+  if (typeof cloudinary === "undefined") {
+    console.error("A biblioteca do Cloudinary não carregou (verifique sua conexão ou se algum bloqueador de anúncios/script está ativo).");
+    if (btnUpload) {
+      btnUpload.style.opacity = "0.5";
+      btnUpload.style.cursor = "not-allowed";
+      const p = btnUpload.querySelector("p");
+      if (p) p.textContent = "Erro: biblioteca do Cloudinary não carregou. Recarregue a página.";
+    }
+  } else {
+    myWidget = criarWidgetPrincipal();
+    widgetCarrossel = criarWidgetCarrossel();
+  }
+
+  btnUpload?.addEventListener("click", () => {
+    if (myWidget) {
+      myWidget.open();
+    } else {
+      alert("O Cloudinary não carregou corretamente. Verifique sua internet e recarregue a página.");
+    }
+  });
+
+  btnUploadCarrossel?.addEventListener("click", () => {
+    if (widgetCarrossel) {
+      widgetCarrossel.open();
+    } else {
+      alert("O Cloudinary não carregou corretamente. Verifique sua internet e recarregue a página.");
+    }
+  });
+
   document.getElementById("btnSalvarSite")?.addEventListener("click", salvarDiretoNoGithub);
   document.getElementById("btnAbrirConfig")?.addEventListener("click", abrirConfigModal);
   document.getElementById("btnFecharConfig")?.addEventListener("click", fecharConfigModal);
