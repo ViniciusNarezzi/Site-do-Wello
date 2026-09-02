@@ -10,7 +10,7 @@ window.addEventListener("DOMContentLoaded", () => {
         btnLerMais.addEventListener("click", (e) => {
             e.preventDefault();
             sobreConteudo.classList.toggle("expandido");
-            
+
             if (sobreConteudo.classList.contains("expandido")) {
                 btnLerMais.innerText = "Ler Menos";
             } else {
@@ -53,71 +53,73 @@ window.addEventListener("DOMContentLoaded", () => {
         const heroBg = document.querySelector(".hero-bg");
         const heroContent = document.querySelector(".hero-content");
         const scrollPosition = window.scrollY;
-        
+
         if (heroBg && heroContent) {
             let opacityValue = 1 - (scrollPosition / 400);
             if (opacityValue < 0) opacityValue = 0;
-            
+
             heroBg.style.opacity = opacityValue;
             heroContent.style.opacity = opacityValue;
         }
     });
 
 
-/* -------------------------------------------------------------
-   Carregar Galeria Dinâmica do JSON (Filtrando as 4 da Home)
-   ------------------------------------------------------------- */
-async function carregarGaleria() {
-    const gridGaleria = document.querySelector('.grid-galeria');
-    if (!gridGaleria) return;
+    /* -------------------------------------------------------------
+       4. Carregar Galeria Dinâmica do JSON
+       ------------------------------------------------------------- */
+    async function carregarGaleria() {
+        const gridGaleria = document.querySelector('.grid-galeria');
+        if (!gridGaleria) return;
 
-    try {
-        const resposta = await fetch('data/galeria.json');
-        const dados = await resposta.json();
-        
-        gridGaleria.innerHTML = '';
-        
-        let listaExibida = dados.trabalhos || [];
+        try {
+            const resposta = await fetch('data/galeria.json');
+            const dados = await resposta.json();
 
-        // Se estiver na Página Inicial (index.html), filtra apenas as marcadas em destaque
-        const ehPaginaInicial = !window.location.pathname.includes('galeria.html');
+            gridGaleria.innerHTML = '';
 
-        if (ehPaginaInicial) {
-            const fotosDestaque = listaExibida.filter(trabalho => trabalho.destaque === true);
-            
-            // Se houver fotos marcadas em destaque, usa elas (no máximo 4). Se não houver, usa as 4 primeiras.
-            if (fotosDestaque.length > 0) {
-                listaExibida = fotosDestaque.slice(0, 4);
-            } else {
-                listaExibida = listaExibida.slice(0, 4);
+            let listaExibida = dados.trabalhos || [];
+
+            // Usa os atributos da própria grid (definidos no HTML) para decidir
+            // o filtro — mais confiável do que adivinhar pela URL da página.
+            // Só a grid da página inicial tem data-destaque="true".
+            if (gridGaleria.dataset.destaque === "true") {
+                const fotosDestaque = listaExibida.filter(trabalho => trabalho.destaque === true);
+                // Se houver fotos marcadas em destaque, usa elas. Senão, usa a lista toda
+                // (o corte de quantidade abaixo garante o limite de qualquer forma).
+                if (fotosDestaque.length > 0) {
+                    listaExibida = fotosDestaque;
+                }
             }
+
+            // Só a grid da página inicial tem data-limite="4"; a galeria completa
+            // não tem esse atributo, então mostra todos os trabalhos.
+            const limite = parseInt(gridGaleria.dataset.limite, 10);
+            if (!isNaN(limite)) {
+                listaExibida = listaExibida.slice(0, limite);
+            }
+
+            listaExibida.forEach(trabalho => {
+                const img = document.createElement('img');
+                img.src = trabalho.imagem;
+                img.alt = trabalho.alt || "Tatuagem por Wello";
+
+                // O carrossel sempre começa pela foto de capa, seguida das fotos
+                // extras cadastradas no painel — sem isso, o clique pulava direto
+                // para a segunda foto e não dava pra "voltar" pra capa.
+                const listaCarrossel = [trabalho.imagem, ...(trabalho.carrossel || [])];
+                img.setAttribute('data-carrossel', listaCarrossel.join(', '));
+
+                gridGaleria.appendChild(img);
+            });
+
+            // Ativa o lightbox para abrir o carrossel nas fotos
+            iniciarLightbox();
+
+        } catch (erro) {
+            console.error("Erro ao carregar a galeria:", erro);
         }
-
-        // Renderiza as fotos selecionadas na tela
-        listaExibida.forEach(trabalho => {
-            const img = document.createElement('img');
-            img.src = trabalho.imagem;
-            img.alt = trabalho.alt || "Tatuagem por Wello";
-
-            if (trabalho.carrossel && trabalho.carrossel.length > 0) {
-                img.setAttribute('data-carrossel', trabalho.carrossel.join(', '));
-            } else {
-                img.setAttribute('data-carrossel', trabalho.imagem);
-            }
-
-            gridGaleria.appendChild(img);
-        });
-
-        // Inicializa o Lightbox para permitir a navegação e o carrossel
-        iniciarLightbox();
-
-    } catch (erro) {
-        console.error("Erro ao carregar a galeria:", erro);
     }
-}
 
-// Executa assim que a página carregar
-document.addEventListener("DOMContentLoaded", carregarGaleria);    
     function iniciarLightbox() {
         const galleryImages = document.querySelectorAll(".grid-galeria img");
         const lightbox = document.getElementById("lightbox");
@@ -126,8 +128,8 @@ document.addEventListener("DOMContentLoaded", carregarGaleria);
         const prevBtn = document.querySelector(".lightbox-prev");
         const nextBtn = document.querySelector(".lightbox-next");
 
-        let currentCarouselList = []; 
-        let currentImageIndex = 0;   
+        let currentCarouselList = [];
+        let currentImageIndex = 0;
 
         if (galleryImages.length > 0 && lightbox) {
             const openLightbox = (imgElement) => {
@@ -140,13 +142,13 @@ document.addEventListener("DOMContentLoaded", carregarGaleria);
 
                 currentImageIndex = 0;
                 lightboxImg.src = currentCarouselList[currentImageIndex];
-                
+
                 // Reset de animação para garantir que a imagem não suma
-                lightboxImg.style.opacity = 1; 
+                lightboxImg.style.opacity = 1;
                 lightboxImg.style.transform = "scale(1)";
 
                 lightbox.classList.add("active");
-                document.body.style.overflow = "hidden"; 
+                document.body.style.overflow = "hidden";
 
                 if (currentCarouselList.length <= 1) {
                     lightbox.classList.add("single-image");
@@ -163,8 +165,7 @@ document.addEventListener("DOMContentLoaded", carregarGaleria);
             const showNext = () => {
                 if (currentCarouselList.length <= 1) return;
                 currentImageIndex = (currentImageIndex + 1) % currentCarouselList.length;
-                
-                // Pequeno efeito de transição ao trocar de foto
+
                 lightboxImg.style.opacity = 0.5;
                 setTimeout(() => {
                     lightboxImg.src = currentCarouselList[currentImageIndex];
@@ -175,7 +176,7 @@ document.addEventListener("DOMContentLoaded", carregarGaleria);
             const showPrev = () => {
                 if (currentCarouselList.length <= 1) return;
                 currentImageIndex = (currentImageIndex - 1 + currentCarouselList.length) % currentCarouselList.length;
-                
+
                 lightboxImg.style.opacity = 0.5;
                 setTimeout(() => {
                     lightboxImg.src = currentCarouselList[currentImageIndex];
@@ -210,120 +211,103 @@ document.addEventListener("DOMContentLoaded", carregarGaleria);
     // Manda o JavaScript carregar as fotos assim que a página abrir
     carregarGaleria();
 
-/* -------------------------------------------------------------
-   5. Interação dos Cards de Estilos (Expansão e Foco)
-   ------------------------------------------------------------- */
-const estilosGrid = document.querySelector(".estilos-grid");
-const estiloCards = document.querySelectorAll(".estilo-card");
+    /* -------------------------------------------------------------
+       5. Interação dos Cards de Estilos (Expansão e Foco)
+       ------------------------------------------------------------- */
+    const estilosGrid = document.querySelector(".estilos-grid");
+    const estiloCards = document.querySelectorAll(".estilo-card");
 
-if (estilosGrid && estiloCards.length > 0) {
-    estiloCards.forEach(card => {
-        card.addEventListener("click", () => {
-            // Se o card clicado já estiver ativo, ele fecha e reseta os outros
-            if (card.classList.contains("ativo")) {
-                card.classList.remove("ativo");
-                estilosGrid.classList.remove("has-active");
-            } else {
-                // Remove a classe 'ativo' de todos os outros cards
-                estiloCards.forEach(c => c.classList.remove("ativo"));
-                
-                // Ativa o card clicado e sinaliza o grid
-                card.classList.add("ativo");
-                estilosGrid.classList.add("has-active");
-            }
+    if (estilosGrid && estiloCards.length > 0) {
+        estiloCards.forEach(card => {
+            card.addEventListener("click", () => {
+                if (card.classList.contains("ativo")) {
+                    card.classList.remove("ativo");
+                    estilosGrid.classList.remove("has-active");
+                } else {
+                    estiloCards.forEach(c => c.classList.remove("ativo"));
+                    card.classList.add("ativo");
+                    estilosGrid.classList.add("has-active");
+                }
+            });
         });
-    });
-}
-
-/* -------------------------------------------------------------
-   Link Inteligente do WhatsApp (Botão e Formulário)
-   ------------------------------------------------------------- */
-const btnWhatsapp = document.getElementById("btnWhatsapp");
-const formOrcamento = document.getElementById("form-orcamento");
-const numeroTelefone = "5518996352122"; // Número configurado
-
-// 1. Ação do Botão Principal do WhatsApp
-if (btnWhatsapp) {
-    btnWhatsapp.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        const agora = new Date();
-        const hora = agora.getHours();
-        const diaSemana = agora.getDay();
-
-        // Saudação por horário
-        let saudacao = "Olá";
-        if (hora >= 5 && hora < 12) {
-            saudacao = "Bom dia";
-        } else if (hora >= 12 && hora < 18) {
-            saudacao = "Boa tarde";
-        } else {
-            saudacao = "Boa noite";
-        }
-
-        // Status do atendimento
-        const emHorarioAtendimento = (diaSemana >= 2 && diaSemana <= 6) && (hora >= 10 && hora < 19);
-
-        let mensagem = `${saudacao}, Wello! Tudo bem? Vi seu site e gostaria de fazer um orçamento para uma tatuagem.`;
-
-        if (!emHorarioAtendimento) {
-            mensagem += ` Sei que estou mandando mensagem fora do horário, mas assim que você conseguir me responder a gente troca uma ideia e marca um horário!`;
-        }
-
-        const urlWhatsapp = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(mensagem)}`;
-        window.open(urlWhatsapp, "_blank");
-    });
-}
-
-// 2. Ação do Formulário de Orçamento (Envia a ideia preenchida direto pro WhatsApp)
-if (formOrcamento) {
-    formOrcamento.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const nome = document.getElementById("nome").value;
-        const ideia = document.getElementById("ideia").value;
-
-        const mensagemForm = `Olá, Wello! Meu nome é ${nome}.\n\nGostaria de fazer um orçamento com a seguinte ideia:\n"${ideia}"`;
-        const urlForm = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(mensagemForm)}`;
-
-        window.open(urlForm, "_blank");
-    });
-}
-
-/* -------------------------------------------------------------
-   Funcionalidades de Voltar ao Topo (Botão Flutuante e Logo Header)
-   ------------------------------------------------------------- */
-const btnVoltarTopo = document.getElementById("btnVoltarTopo");
-const logoTopo = document.getElementById("logoTopo");
-
-// 1. Exibe ou oculta o botão dependendo da rolagem da página
-window.addEventListener("scroll", () => {
-    if (window.scrollY > 400) {
-        btnVoltarTopo.classList.add("visivel");
-    } else {
-        btnVoltarTopo.classList.remove("visivel");
     }
-});
 
-// 2. Ação de clique no botão flutuante para subir suavemente
-if (btnVoltarTopo) {
-    btnVoltarTopo.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    });
-}
+    /* -------------------------------------------------------------
+       Link Inteligente do WhatsApp (Botão e Formulário)
+       ------------------------------------------------------------- */
+    const btnWhatsapp = document.getElementById("btnWhatsapp");
+    const formOrcamento = document.getElementById("form-orcamento");
+    const numeroTelefone = "5518996352122";
 
-// 3. Ação de clique no título Wello Tattoo no Header para subir suavemente
-if (logoTopo) {
-    logoTopo.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
+    if (btnWhatsapp) {
+        btnWhatsapp.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const agora = new Date();
+            const hora = agora.getHours();
+            const diaSemana = agora.getDay();
+
+            let saudacao = "Olá";
+            if (hora >= 5 && hora < 12) {
+                saudacao = "Bom dia";
+            } else if (hora >= 12 && hora < 18) {
+                saudacao = "Boa tarde";
+            } else {
+                saudacao = "Boa noite";
+            }
+
+            const emHorarioAtendimento = (diaSemana >= 2 && diaSemana <= 6) && (hora >= 10 && hora < 19);
+
+            let mensagem = `${saudacao}, Wello! Tudo bem? Vi seu site e gostaria de fazer um orçamento para uma tatuagem.`;
+
+            if (!emHorarioAtendimento) {
+                mensagem += ` Sei que estou mandando mensagem fora do horário, mas assim que você conseguir me responder a gente troca uma ideia e marca um horário!`;
+            }
+
+            const urlWhatsapp = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWhatsapp, "_blank");
         });
+    }
+
+    if (formOrcamento) {
+        formOrcamento.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById("nome").value;
+            const ideia = document.getElementById("ideia").value;
+
+            const mensagemForm = `Olá, Wello! Meu nome é ${nome}.\n\nGostaria de fazer um orçamento com a seguinte ideia:\n"${ideia}"`;
+            const urlForm = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(mensagemForm)}`;
+
+            window.open(urlForm, "_blank");
+        });
+    }
+
+    /* -------------------------------------------------------------
+       Funcionalidades de Voltar ao Topo (Botão Flutuante e Logo Header)
+       ------------------------------------------------------------- */
+    const btnVoltarTopo = document.getElementById("btnVoltarTopo");
+    const logoTopo = document.getElementById("logoTopo");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+            btnVoltarTopo?.classList.add("visivel");
+        } else {
+            btnVoltarTopo?.classList.remove("visivel");
+        }
     });
-}
+
+    if (btnVoltarTopo) {
+        btnVoltarTopo.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+
+    if (logoTopo) {
+        logoTopo.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
 
 });
