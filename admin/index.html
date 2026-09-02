@@ -7,16 +7,28 @@
 
   <!-- Fontes Oficiais -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- Estilos -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="admin.css">
+
+  <!-- Login: protege o painel para que só quem foi convidado consiga entrar -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <!-- Bibliotecas Externas -->
   <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 </head>
 <body>
+
+  <!-- Tela de bloqueio exibida até o login ser confirmado -->
+  <div id="telaLogin" style="position:fixed; inset:0; background:#0a0a0a; z-index:5000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem; text-align:center; padding:2rem;">
+    <h1 style="font-family:'Cinzel',serif; color:#f3e5ab; letter-spacing:2px;">Wello Tattoo</h1>
+    <p style="color:#b3b3b3; max-width:340px;">Esta área é restrita. Faça login para acessar o painel administrativo.</p>
+    <button id="btnFazerLogin" style="background:linear-gradient(135deg,#f3e5ab,#d4af37,#aa8c2c); color:#0a0a0a; font-family:'Cinzel',serif; font-weight:700; border:none; padding:12px 24px; border-radius:4px; cursor:pointer; letter-spacing:1px;">
+      Entrar
+    </button>
+  </div>
 
   <header>
     <div class="logo">
@@ -48,18 +60,18 @@
   </main>
 
   <!-- Modal do Carrossel -->
-<div id="modalCarrossel" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>CARROSSEL DA PUBLICAÇÃO</h3>
-      <span class="modal-close" id="btnFecharCarrossel" onclick="fecharModalCarrossel()">&times;</span>
-    </div>
+  <div id="modalCarrossel" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>CARROSSEL DA PUBLICAÇÃO</h3>
+        <span class="modal-close" id="btnFecharCarrossel">&times;</span>
+      </div>
 
-    <div class="upload-box-sub" id="btnUploadCarrossel">+ ADICIONAR FOTO AO CARROSSEL</div>
-    <div class="lista-subfotos" id="listaSubfotos"></div>
-    <button class="btn-modal-concluir" id="btnConcluirCarrossel" onclick="fecharModalCarrossel()">CONCLUÍDO</button>
+      <div class="upload-box-sub" id="btnUploadCarrossel">+ ADICIONAR FOTO AO CARROSSEL</div>
+      <div class="lista-subfotos" id="listaSubfotos"></div>
+      <button class="btn-modal-concluir" id="btnConcluirCarrossel">CONCLUÍDO</button>
+    </div>
   </div>
-</div>
 
   <!-- Modal de Configuração do GitHub -->
   <div id="modalConfig" class="modal-overlay">
@@ -73,7 +85,7 @@
 
       <div class="config-field">
         <label for="cfgRepo">Repositório do GitHub (ex: usuario/nome-do-repo)</label>
-        <input type="text" id="cfgRepo" placeholder="ex: wello/wello-tattoo">
+        <input type="text" id="cfgRepo" placeholder="ex: ViniciusNarezzi/Site-do-Wello">
       </div>
 
       <div class="config-field">
@@ -84,6 +96,39 @@
       <button class="btn-modal-concluir" id="btnSalvarConfig">SALVAR CONFIGURAÇÃO</button>
     </div>
   </div>
+
+  <script>
+    // Proteção de login: só libera o painel para quem estiver autenticado
+    // pelo Netlify Identity. Se o widget não carregar (ex: teste local sem
+    // internet ou site ainda não conectado ao Netlify), libera o acesso
+    // mesmo assim, para não travar seus testes.
+    function liberarPainel() {
+      const tela = document.getElementById("telaLogin");
+      if (tela) tela.style.display = "none";
+    }
+
+    if (window.netlifyIdentity) {
+      netlifyIdentity.on("init", user => {
+        if (user) {
+          liberarPainel();
+        }
+      });
+
+      netlifyIdentity.on("login", () => {
+        liberarPainel();
+        netlifyIdentity.close();
+      });
+
+      document.getElementById("btnFazerLogin").addEventListener("click", () => {
+        netlifyIdentity.open();
+      });
+
+      netlifyIdentity.init();
+    } else {
+      // Widget não carregou — libera para não bloquear testes locais.
+      liberarPainel();
+    }
+  </script>
 
   <script src="admin.js"></script>
 </body>
