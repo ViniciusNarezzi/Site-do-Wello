@@ -15,6 +15,15 @@
   <!-- Login: protege o painel para que só quem foi convidado consiga entrar -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
+  <style>
+    /* O pop-up de login do Netlify Identity precisa ficar ACIMA da nossa
+       tela de bloqueio (que usa z-index: 5000), senão ele abre escondido
+       atrás dela e parece que o botão "Entrar" não faz nada. */
+    iframe#netlify-identity-widget {
+      z-index: 9999 !important;
+    }
+  </style>
+
   <!-- Bibliotecas Externas -->
   <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
