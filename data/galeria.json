@@ -4,7 +4,9 @@
       "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788308911/c7qsuyw5q66fhb1koy7w.png",
       "alt": "Tatuagem por Wello",
       "destaque": true,
-      "carrossel": []
+      "carrossel": [
+        "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788311992/t2oj8khbno5rr7e3bnw3.png"
+      ]
     },
     {
       "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788304641/tdscybu8mw0rgqpcwxay.png",
