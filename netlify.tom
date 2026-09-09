@@ -1,0 +1,12 @@
+# ==========================================================================
+# Wello Tattoo — Configuração do Netlify
+# ==========================================================================
+#
+# "ignore" roda esse comando a cada commit. Se ele retornar sem diferenças
+# (código de saída 0) considerando TUDO exceto data/galeria.json, o Netlify
+# CANCELA o deploy — ou seja: se o único arquivo alterado no commit foi a
+# galeria (o que acontece toda vez que o admin salva fotos), não gasta
+# minuto de build nenhum. Se você alterar qualquer outro arquivo (HTML,
+# CSS, JS de verdade), o deploy acontece normalmente.
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':!data/galeria.json'"
