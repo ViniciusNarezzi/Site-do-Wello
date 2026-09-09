@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página não encontrada | Wello Tattoo</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .pagina-404 {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--bg-primary);
+        }
+
+        .pagina-404 .numero {
+            font-family: var(--font-heading);
+            font-size: clamp(5rem, 18vw, 10rem);
+            font-weight: 900;
+            line-height: 1;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .pagina-404 h2 {
+            font-family: var(--font-heading);
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .pagina-404 p {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            max-width: 420px;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .pagina-404 .acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .pagina-404 .logo-404 {
+            margin-bottom: 2.5rem;
+        }
+
+        .pagina-404 .logo-404 h1 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pagina-404">
+        <div class="logo-404">
+            <a href="/" style="text-decoration: none;">
+                <h1>Wello Tattoo</h1>
+            </a>
+        </div>
+
+        <div class="numero">404</div>
+        <h2>Essa página ainda não foi tatuada aqui</h2>
+        <p>
+            A página que você procura não existe, foi movida ou o endereço foi digitado errado.
+            Mas o resto do estúdio está logo ali.
+        </p>
+
+        <div class="acoes">
+            <a href="/" class="btn">Voltar para o Início</a>
+            <a href="/galeria.html" class="btn" style="background: transparent; border: 1px solid var(--border-gold); color: var(--gold-light); box-shadow: none;">Ver Galeria</a>
+        </div>
+    </div>
+</body>
+
+</html>
