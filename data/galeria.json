@@ -1,6 +1,16 @@
 {
   "trabalhos": [
     {
+      "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788996856/gzt1v35xukbecy3itjh6.png",
+      "alt": "Tatuagem por Wello",
+      "destaque": false,
+      "carrossel": [
+        "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788996872/zecla5xptiafjkxl7mam.png",
+        "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788996872/vdpfnizywzlgwzjekkfv.png",
+        "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788996872/vjwwvrmjaydgnjcii9kb.png"
+      ]
+    },
+    {
       "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788995867/gq9naidtf3vldzasxtvg.png",
       "alt": "Tatuagem por Wello",
       "destaque": false,
