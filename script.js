@@ -65,15 +65,33 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
     /* -------------------------------------------------------------
-       4. Carregar Galeria Dinâmica do JSON
+       4. Carregar Galeria Dinâmica do JSON — direto do GitHub, sem
+          depender de um novo deploy no Netlify a cada foto salva.
        ------------------------------------------------------------- */
+    const REPO_GALERIA = "ViniciusNarezzi/Site-do-Wello";
+    const BRANCH_GALERIA = "main";
+
     async function carregarGaleria() {
         const gridGaleria = document.querySelector('.grid-galeria');
         if (!gridGaleria) return;
 
+        const urlGithub = `https://raw.githubusercontent.com/${REPO_GALERIA}/${BRANCH_GALERIA}/data/galeria.json?_=${Date.now()}`;
+
         try {
-            const resposta = await fetch('data/galeria.json');
-            const dados = await resposta.json();
+            let dados;
+            try {
+                // Busca direto do GitHub — reflete o que foi salvo no admin
+                // na hora, sem precisar esperar um deploy do Netlify.
+                const resposta = await fetch(urlGithub);
+                if (!resposta.ok) throw new Error(`GitHub retornou status ${resposta.status}`);
+                dados = await resposta.json();
+            } catch (erroGithub) {
+                // Se o GitHub falhar por algum motivo (fora do ar, offline, etc.),
+                // cai pra cópia local publicada como plano B.
+                console.warn("Não consegui buscar do GitHub, usando cópia local:", erroGithub);
+                const respostaLocal = await fetch('data/galeria.json');
+                dados = await respostaLocal.json();
+            }
 
             gridGaleria.innerHTML = '';
 
