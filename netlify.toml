@@ -2,11 +2,40 @@
 # Wello Tattoo — Configuração do Netlify
 # ==========================================================================
 #
-# "ignore" roda esse comando a cada commit. Se ele retornar sem diferenças
-# (código de saída 0) considerando TUDO exceto data/galeria.json, o Netlify
-# CANCELA o deploy — ou seja: se o único arquivo alterado no commit foi a
-# galeria (o que acontece toda vez que o admin salva fotos), não gasta
-# minuto de build nenhum. Se você alterar qualquer outro arquivo (HTML,
-# CSS, JS de verdade), o deploy acontece normalmente.
+# "ignore" roda esse comando a cada commit. Ele confere se algum dos
+# arquivos de CÓDIGO DE VERDADE mudou (HTML, CSS, JS, pasta admin, pasta
+# assets). Se nenhum deles mudou — ou seja, o commit só alterou
+# data/galeria.json, que é o que acontece toda vez que o admin salva
+# fotos — o Netlify CANCELA o deploy, sem gastar minuto de build.
+#
+# "git fetch --unshallow" garante que o histórico completo do repositório
+# esteja disponível antes da comparação (o Netlify às vezes clona só uma
+# parte do histórico, o que quebra essa checagem se não fizermos isso).
 [build]
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':!data/galeria.json'"
+  ignore = "git fetch --unshallow --quiet 2>/dev/null; git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- index.html galeria.html script.js style.css netlify.toml admin assets"
+
+# ==========================================================================
+# Cabeçalhos de segurança HTTP
+# ==========================================================================
+#
+# A Content-Security-Policy abaixo só libera os domínios externos que o
+# site realmente usa: Google Fonts, Netlify Identity (login do admin),
+# Cloudinary (upload e exibição das fotos), GitHub (a galeria busca os
+# dados de lá) e o mapa do Google incorporado na seção de localização.
+# Se um dia você adicionar algum outro serviço externo (outro script,
+# outra fonte, etc.), essa lista precisa ser atualizada, senão o
+# navegador bloqueia o recurso novo.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), geolocation=(), microphone=(), payment=(), usb=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://upload-widget.cloudinary.com https://media-library.cloudinary.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://*.cloudinary.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://api.cloudinary.com https://*.cloudinary.com https://identity.netlify.com; frame-src https://www.google.com https://identity.netlify.com https://upload-widget.cloudinary.com https://widget.cloudinary.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+
+# A página /admin não precisa (nem deve) ser indexada pelo Google.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
