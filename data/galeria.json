@@ -1,6 +1,12 @@
 {
   "trabalhos": [
     {
+      "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788997360/xujagc1myyzfwq4fq2hx.png",
+      "alt": "Tatuagem por Wello",
+      "destaque": false,
+      "carrossel": []
+    },
+    {
       "imagem": "https://res.cloudinary.com/t5fv9sbq/image/upload/v1788996856/gzt1v35xukbecy3itjh6.png",
       "alt": "Tatuagem por Wello",
       "destaque": false,
